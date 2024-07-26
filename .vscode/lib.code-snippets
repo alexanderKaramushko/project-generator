@@ -1,0 +1,18 @@
+{
+  "Describe with it.todo": {
+    "scope": "typescript",
+    "prefix": [
+      "dt",
+      "Describe with it.todo"
+    ],
+    "body": [
+      "import ${TM_FILENAME/(.*)\\.test\\..+$/$1/} from '.';",
+      "",
+      "describe('Test ${TM_FILENAME/(.*)\\.test\\..+$/$1/}', () => {",
+      "  it.todo('should ...');",
+      "});",
+      "",
+    ],
+    "description": "layer function with props"
+  }
+}

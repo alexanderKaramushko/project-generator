@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "name": "Debugger",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceFolder}",
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register/transpile-only"
+      ],
+      "args": [
+        "esbuild/esbuild.prod.ts"
+      ],
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ]
+    }
+  ]
+}

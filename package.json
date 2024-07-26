@@ -1,0 +1,48 @@
+{
+  "name": "root",
+  "version": "0.0.0",
+  "description": "Root library setup",
+  "keywords": [
+    "typescript",
+    "bundle",
+    "generator"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Alexander Karamushko",
+    "email": "alex.karamushko@nordclan.com",
+    "url": "https://t.me/melkor_b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:dev": "vitest watch"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.4.2",
+    "@commitlint/config-conventional": "17.4.2",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-import-resolver-node": "^0.3.3",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-testing-library": "^5.10.0",
+    "husky": "8.0.2",
+    "lint-staged": "^15.2.2",
+    "vite": "^5.3.5",
+    "vitest": "^2.0.4"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix"
+    ]
+  },
+  "alias": {
+    "lib": "./lib"
+  }
+}
