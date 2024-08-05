@@ -1,0 +1,23 @@
+{
+  "name": "pg-template-typescript",
+  "version": "1.2.0",
+  "keywords": [
+    "typescript",
+    "project-generator",
+    "template"
+  ],
+  "description": "Шаблон Typescript.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator.git",
+    "directory": "packages/pg-template-typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "files": [
+    "template",
+    "template.json"
+  ]
+}
