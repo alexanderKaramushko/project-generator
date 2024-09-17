@@ -8,7 +8,7 @@
     "start": "node ./node_modules/.bin/project-generator"
   },
   "devDependencies": {
-    "project-generator": "../../.."
+    "project-generator": "../../packages/project-generator"
   },
   "author": "",
   "license": "ISC"

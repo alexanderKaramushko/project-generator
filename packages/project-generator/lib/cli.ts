@@ -10,9 +10,13 @@ import packageJson from '../../../package.json';
  */
 export type CLIArguments = {
   /**
-   * @description Выбор пресета проекта.
+   * @description Директория, в которой будет создано приложение.
    */
-  preset: 'React' | 'NodeJS' | 'Typescript';
+  dir: string;
+  /**
+   * @description Выбор шаблона проекта.
+   */
+  template: 'React' | 'NodeJS' | 'Typescript';
 }
 
 /**
@@ -21,7 +25,8 @@ export type CLIArguments = {
 export class CLIStorage {
 
   private args: CLIArguments = {
-    preset: 'React',
+    dir: '',
+    template: 'React',
   }
 
   constructor() {
@@ -48,7 +53,7 @@ export class CLIStorage {
         console.log();
       });
 
-    program.parse(process.argv);
+    program.parse();
 
     const options = program.opts();
 
@@ -84,7 +89,9 @@ export class CLIStorage {
       return;
     }
 
-    this.args.preset = options.preset;
+    // eslint-disable-next-line prefer-destructuring
+    this.args.dir = program.args[0];
+    this.args.template = options.template;
   }
 
   public logArgs() {

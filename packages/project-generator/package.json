@@ -20,7 +20,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "project-generator": "./cli.js"
+    "project-generator": "./bin/project-generator.js"
   },
   "scripts": {
     "prepublishOnly": "clean-package",

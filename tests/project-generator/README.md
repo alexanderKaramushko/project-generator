@@ -2,5 +2,5 @@
 
 Инструкция по настройке:
 
-1. yarn install
-2. yarn start -- [-- args]
+1. npm i install
+2. npm run start -- [-- args]

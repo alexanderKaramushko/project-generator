@@ -1,6 +1,10 @@
+/* eslint-disable sort-keys */
 import type { BuildOptions } from 'esbuild';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import esbuild from 'esbuild';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import ignorePlugin from 'esbuild-plugin-ignore';
+
 import { typeScriptDeclarationsPlugin } from './plugins';
 
 const options = {
@@ -20,5 +24,6 @@ const options = {
 } as BuildOptions;
 
 esbuild.build(options).catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(err);
 });

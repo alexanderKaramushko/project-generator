@@ -1,18 +1,29 @@
-/* eslint-disable no-console */
+import dns from 'dns';
+
 import { CLIArguments, CLIStorage } from './cli';
+
+function checkIfOnline() {
+  return new Promise((resolve) => {
+    dns.lookup('registry.yarnpkg.com', (error) => {
+      resolve(error == null);
+    });
+  });
+}
 
 export class Core {
 
-  // eslint-disable-next-line no-useless-constructor
+  // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private CLI: CLIStorage) {}
 
-  createApp(CLIArgs: CLIArguments) {
-    console.log(this);
-
-    // до начала работы создать монорепу project-generator-templates@template-name
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
+  async createApp(CLIArgs: CLIArguments) {
+    if (await checkIfOnline()) {
+      // eslint-disable-next-line no-console
+      console.log('Вы в сети');
+    }
 
     // 1. проверить, что нужная директория существует
-    // 2. проверить наличие соединения через dns lookup
+    // 2. проверить наличие соединения через dns lookup +
     // 3. создать package.json
     // 4. сформировать массив с зависимостями
     //    типа ["основная зависимость 1", "project-generator-template@/template-name"]
