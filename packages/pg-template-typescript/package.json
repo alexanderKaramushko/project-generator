@@ -16,9 +16,5 @@
   "license": "MIT",
   "engines": {
     "node": ">=14"
-  },
-  "files": [
-    "template",
-    "template.json"
-  ]
+  }
 }
