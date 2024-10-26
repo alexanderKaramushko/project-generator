@@ -98,4 +98,8 @@ export class CLIStorage {
     console.log(chalk.green(JSON.stringify(this.args)));
   }
 
+  public getArgs() {
+    return this.args;
+  }
+
 }

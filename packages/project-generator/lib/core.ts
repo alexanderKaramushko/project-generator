@@ -1,6 +1,7 @@
 import dns from 'dns';
+import { existsSync, mkdirSync } from 'node:fs';
 
-import { CLIArguments, CLIStorage } from './cli';
+import { CLIStorage } from './cli';
 
 function checkIfOnline() {
   return new Promise((resolve) => {
@@ -16,13 +17,18 @@ export class Core {
   constructor(private CLI: CLIStorage) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
-  async createApp(CLIArgs: CLIArguments) {
+  async createApp() {
+    const { dir } = this.CLI.getArgs();
+
+    if (!existsSync(dir)) {
+      mkdirSync(dir);
+    }
+
     if (await checkIfOnline()) {
       // eslint-disable-next-line no-console
       console.log('Вы в сети');
     }
 
-    // 1. проверить, что нужная директория существует
     // 2. проверить наличие соединения через dns lookup +
     // 3. создать package.json
     // 4. сформировать массив с зависимостями
