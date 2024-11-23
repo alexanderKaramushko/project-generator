@@ -44,7 +44,9 @@ export class Core {
     console.log(chalk.blue('Распаковка шаблона'));
     execSync(`cd ${dir} && tar -xvf pg-template-starter-*.tgz && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
-    // 3. пройтись по template.json и смерджить с package.json следующие поля:
+    // 2. извлечь данные по preset из template.json
+
+    // 3. из извлеченных данных по preset смерджить с package.json следующие поля:
     //    – name (мерджиться в src)
     //    – keywords (мерджиться в src)
     //    – description (мерджиться в src)
@@ -53,13 +55,16 @@ export class Core {
     //    – dependencies (мерджиться в src)
     //    – devDependencies (мерджиться в root)
 
-    // 4. пройтись по template.json и создать следующие файлы в root, с наполнением из template.json:
+    // 4. из извлеченных данных по preset создать следующие файлы в root, с наполнением из template.json:
     //    – eslintConfig
     //    – jestConfig
     //    – typescriptConfig
 
-    // 5. установить зависимости через npm в root и в src
-    // 6. инициализировать git и сделать начальный коммит
+    // 5. из извлеченных данных по preset создать файловую структуру по схеме поля structure
+    //    и записать в контент, если в схеме файл с полем content
+
+    // 6. установить зависимости через npm в root и в src
+    // 7. инициализировать git и сделать начальный коммит
   }
 
 }
