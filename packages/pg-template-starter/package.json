@@ -1,17 +1,17 @@
 {
-  "name": "pg-template-typescript",
+  "name": "pg-template-starter",
   "version": "1.0.0",
   "keywords": [
-    "typescript",
+    "starter-pack",
     "project-generator",
     "template"
   ],
   "main": ".",
-  "description": "Шаблон Typescript",
+  "description": "Стартовый шаблон",
   "repository": {
     "type": "git",
     "url": "https://github.com/alexanderKaramushko/project-generator.git",
-    "directory": "packages/pg-template-typescript"
+    "directory": "packages/pg-template-starter"
   },
   "license": "MIT",
   "engines": {

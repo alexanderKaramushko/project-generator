@@ -29,7 +29,6 @@ export class Core {
       console.log('Вы в сети');
     }
 
-    // 2. проверить наличие соединения через dns lookup +
     // 3. создать package.json
     // 4. сформировать массив с зависимостями
     //    типа ["основная зависимость 1", "project-generator-template@/template-name"]
