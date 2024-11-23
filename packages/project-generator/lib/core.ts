@@ -29,12 +29,22 @@ export class Core {
       console.log('Вы в сети');
     }
 
-    // 3. создать package.json
-    // 4. сформировать массив с зависимостями
-    //    типа ["основная зависимость 1", "project-generator-template@/template-name"]
-    // 5. установить зависимости через npm
-    // 6. смерджить appPackageJson и templatePackage.json
-    // 7. инициализировать git и сделать начальный коммит
+    // 3. пройтись по template.json и смерджить с package.json следующие поля:
+    //    – name (мерджиться в src)
+    //    – keywords (мерджиться в src)
+    //    – description (мерджиться в src)
+    //    – repository (мерджиться в src)
+    //    – engines (мерджиться в src)
+    //    – dependencies (мерджиться в src)
+    //    – devDependencies (мерджиться в root)
+
+    // 4. пройтись по template.json и создать следующие файлы в root, с наполнением из template.json:
+    //    – eslintConfig
+    //    – jestConfig
+    //    – typescriptConfig
+
+    // 5. установить зависимости через npm в root и в src
+    // 6. инициализировать git и сделать начальный коммит
   }
 
 }
