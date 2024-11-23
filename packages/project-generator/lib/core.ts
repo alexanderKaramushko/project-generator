@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+import chalk from 'chalk';
+import { execSync } from 'child_process';
 import dns from 'dns';
 import { existsSync, mkdirSync } from 'node:fs';
 
@@ -21,13 +24,25 @@ export class Core {
     const { dir } = this.CLI.getArgs();
 
     if (!existsSync(dir)) {
+      console.log(chalk.blue(`Указанной директории ${dir} нет, создаем`));
       mkdirSync(dir);
     }
 
     if (await checkIfOnline()) {
-      // eslint-disable-next-line no-console
-      console.log('Вы в сети');
+      console.log(chalk.green('Вы в сети'));
+    } else {
+      console.log(chalk.red('Похоже, что вы отключены от сети'));
     }
+
+    console.log(chalk.blue(`Переходим в директорию ${dir}`));
+
+    console.log(chalk.blue('Скачивание стартового шаблона'));
+    execSync(`npm pack pg-template-starter --pack-destination ${dir}`);
+
+    const normalizedDir = dir.endsWith('/') ? dir : `${dir}/`;
+
+    console.log(chalk.blue('Распаковка шаблона'));
+    execSync(`cd ${dir} && tar -xvf pg-template-starter-*.tgz && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
     // 3. пройтись по template.json и смерджить с package.json следующие поля:
     //    – name (мерджиться в src)

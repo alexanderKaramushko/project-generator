@@ -8,8 +8,12 @@
     "start": "node ./node_modules/.bin/project-generator"
   },
   "devDependencies": {
-    "project-generator": "../../packages/project-generator"
+    "project-generator": "../../packages/project-generator",
+    "sync": ""
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "install": "^0.13.0"
+  }
 }
