@@ -1,1 +1,3 @@
-export * from './createFile';
+export * from './createRWFile';
+export * from './mergeJSONFile';
+
