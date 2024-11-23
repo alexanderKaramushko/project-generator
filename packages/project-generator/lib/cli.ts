@@ -95,7 +95,9 @@ export class CLIStorage {
   }
 
   public logArgs() {
-    console.log(chalk.green(JSON.stringify(this.args)));
+    console.log(chalk.green('Переданные аргументы:'));
+    console.table(this.args);
+    console.log('');
   }
 
   public getArgs() {
