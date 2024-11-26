@@ -2,7 +2,8 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import dns from 'dns';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 
 import { CLIStorage } from './cli';
 
@@ -14,6 +15,28 @@ function checkIfOnline() {
   });
 }
 
+// 2. извлечь данные по preset из template.json (возможно стоит избавиться от файловой структуры
+//    в пакете вообще и делать генерацию полностью из template.json)
+
+// 3. из извлеченных данных по preset смерджить с package.json следующие поля:
+//    – name (мерджиться в src)
+//    – keywords (мерджиться в src)
+//    – description (мерджиться в src)
+//    – repository (мерджиться в src)
+//    – engines (мерджиться в src)
+//    – dependencies (мерджиться в src)
+//    – devDependencies (мерджиться в root)
+
+// 4. из извлеченных данных по preset создать следующие файлы в root, с наполнением из template.json:
+//    – eslintConfig
+//    – jestConfig
+//    – typescriptConfig
+
+// 5. из извлеченных данных по preset создать файловую структуру по схеме поля structure
+//    и записать в контент, если в схеме файл с полем content
+
+// 6. установить зависимости через npm в root и в src
+// 7. инициализировать git и сделать начальный коммит
 export class Core {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
@@ -21,11 +44,11 @@ export class Core {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   async createApp() {
-    const { dir } = this.CLI.getArgs();
+    const { dir, template } = this.CLI.getArgs();
 
     if (!existsSync(dir)) {
       console.log(chalk.blue(`Указанной директории ${dir} нет, создаем`));
-      mkdirSync(dir);
+      mkdirSync(dir, { recursive: true });
     }
 
     if (await checkIfOnline()) {
@@ -42,29 +65,14 @@ export class Core {
     const normalizedDir = dir.endsWith('/') ? dir : `${dir}/`;
 
     console.log(chalk.blue('Распаковка шаблона'));
-    execSync(`cd ${dir} && tar -xvf pg-template-starter-*.tgz && rm ${normalizedDir}pg-template-starter-*.tgz`);
+    execSync(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
-    // 2. извлечь данные по preset из template.json
+    const templateJSON = JSON.parse(readFileSync(path.resolve(dir, 'package', 'template.json'), { encoding: 'utf-8' }));
 
-    // 3. из извлеченных данных по preset смерджить с package.json следующие поля:
-    //    – name (мерджиться в src)
-    //    – keywords (мерджиться в src)
-    //    – description (мерджиться в src)
-    //    – repository (мерджиться в src)
-    //    – engines (мерджиться в src)
-    //    – dependencies (мерджиться в src)
-    //    – devDependencies (мерджиться в root)
-
-    // 4. из извлеченных данных по preset создать следующие файлы в root, с наполнением из template.json:
-    //    – eslintConfig
-    //    – jestConfig
-    //    – typescriptConfig
-
-    // 5. из извлеченных данных по preset создать файловую структуру по схеме поля structure
-    //    и записать в контент, если в схеме файл с полем content
-
-    // 6. установить зависимости через npm в root и в src
-    // 7. инициализировать git и сделать начальный коммит
+    if (!Reflect.has(templateJSON, template)) {
+      console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
+      execSync(`rm -r ${dir}`);
+    }
   }
 
 }
