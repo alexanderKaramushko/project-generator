@@ -23,8 +23,11 @@
   "scripts": {
     "test": "vitest",
     "test:dev": "vitest watch",
-    "publish:pg-template-starter": "npm publish -w pg-template-starter",
-    "publish:project-generator": "npm publish -w project-generator"
+    "publish:pg-template-starter:minor": "sh ./bump minor pg-template-starter",
+    "publish:pg-template-starter:major": "sh ./bump major pg-template-starter",
+    "publish:project-generator:minor": "sh ./bump minor project-generator",
+    "publish:project-generator:major": "sh ./bump major project-generator",
+    "postinstall": "chmod +x ./bump"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.2",

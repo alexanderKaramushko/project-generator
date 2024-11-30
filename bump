@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+version=$1
+workspace=$2
+
+npm version $version -w $workspace --no-git-tag-version
+
+sleep 1
+
+git add "./packages/$workspace/package.json"
+git add "./package-lock.json"
+
+git commit -m "$version-релиз пакета $workspace"
+npm publish -w $workspace
