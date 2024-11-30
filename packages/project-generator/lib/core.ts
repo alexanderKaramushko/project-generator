@@ -5,7 +5,8 @@ import dns from 'dns';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { CLIStorage } from './cli';
+import { CLIStorage } from './CLIStorage';
+import { TemplateValidator } from './template-validator';
 
 function checkIfOnline() {
   return new Promise((resolve) => {
@@ -67,12 +68,17 @@ export class Core {
     console.log(chalk.blue('Распаковка шаблона'));
     execSync(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
-    const templateJSON = JSON.parse(readFileSync(path.resolve(dir, 'package', 'template.json'), { encoding: 'utf-8' }));
+    const templateJSON = readFileSync(path.resolve(dir, 'package', 'template.json'), { encoding: 'utf-8' });
+    const templateData = JSON.parse(templateJSON);
 
-    if (!Reflect.has(templateJSON, template)) {
+    if (!Reflect.has(templateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
       execSync(`rm -r ${dir}`);
     }
+
+    const templateValidator = new TemplateValidator(templateData[template]);
+
+    templateValidator.validate();
   }
 
 }

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "Валидатор template.json",
+  "description": "Валидация полей для генерации проекта",
+  "type": "object",
+  "properties": {
+    "package": {
+      "description": "package.json",
+      "$ref": "https://json.schemastore.org/package.json"
+    },
+    "configs": {
+      "type": "object",
+      "properties": {
+        "eslintConfig": {
+          "description": "Конфиг eslint",
+          "$ref": "https://json.schemastore.org/eslintrc.json"
+        },
+        "typescriptConfig": {
+          "description": "Конфиг typescript",
+          "$ref": "https://json.schemastore.org/tsconfig"
+        }
+      },
+      "required": ["eslintConfig", "typescriptConfig"]
+    }
+  },
+  "required": ["package", "configs"]
+}
