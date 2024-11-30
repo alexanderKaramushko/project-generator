@@ -5,6 +5,9 @@ import chalk from 'chalk';
 
 import { eslintSchema, packageSchema, templateSchema, typescriptSchema } from './schemas';
 
+/**
+ * Класс для валидации JSON шаблона.
+ */
 export class TemplateValidator {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function

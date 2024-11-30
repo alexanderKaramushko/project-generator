@@ -38,6 +38,10 @@ function checkIfOnline() {
 
 // 6. установить зависимости через npm в root и в src
 // 7. инициализировать git и сделать начальный коммит
+
+/**
+ * Класс скачивания пакета шаблонов и генерации проекта из шаблона.
+ */
 export class Core {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
