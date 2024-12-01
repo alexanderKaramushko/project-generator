@@ -25,8 +25,8 @@
     "test:dev": "vitest watch",
     "publish:pg-template-starter:minor": "sh ./bump minor pg-template-starter",
     "publish:pg-template-starter:major": "sh ./bump major pg-template-starter",
-    "publish:project-generator:minor": "sh ./bump minor project-generator",
-    "publish:project-generator:major": "sh ./bump major project-generator",
+    "publish:project-generator-cli:minor": "sh ./bump minor project-generator-cli",
+    "publish:project-generator-cli:major": "sh ./bump major project-generator-cli",
     "postinstall": "chmod +x ./bump"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
-  "name": "project-generator",
-  "version": "0.0.0-stub",
+  "name": "project-generator-cli",
+  "version": "1.0.0",
   "description": "CLI для генерации проекта из шаблонов",
   "keywords": [
     "typescript",
