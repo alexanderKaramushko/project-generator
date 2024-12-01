@@ -13,4 +13,4 @@ git add "./package-lock.json"
 git commit -m "$version-релиз пакета $workspace"
 npm publish -w $workspace
 
-[ $? -eq 1 ] && git reset --soft HEAD~1
+[ $? -eq 1 ] && git reset --hard HEAD~1
