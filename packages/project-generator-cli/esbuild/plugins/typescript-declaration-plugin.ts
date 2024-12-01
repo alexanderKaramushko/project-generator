@@ -11,7 +11,7 @@ export default () => ({
       }
 
       try {
-        execSync('tsc --p tsconfig.build.json && tsc-alias -p tsconfig.build.json');
+        execSync('tsc --p tsconfig.declaration.json');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);

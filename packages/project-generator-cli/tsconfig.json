@@ -29,11 +29,5 @@
   },
   "include": [
     "lib/**/*"
-  ],
-  "ts-node": {
-    "esm": true,
-    "compilerOptions": {
-      "module": "nodenext"
-    }
-  }
+  ]
 }

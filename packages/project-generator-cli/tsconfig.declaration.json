@@ -4,7 +4,6 @@
     "resolveJsonModule": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist",
     "noEmit": false,
     "declarationDir": "dist"
   },
