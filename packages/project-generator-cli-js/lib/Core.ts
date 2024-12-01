@@ -7,6 +7,7 @@ import path from 'node:path';
 
 import { CLIStorage } from './CLIStorage';
 import { TemplateValidator } from './template-validator';
+import { mergeJSONFile } from './utils';
 
 function checkIfOnline() {
   return new Promise((resolve) => {
@@ -72,7 +73,8 @@ export class Core {
     console.log(chalk.blue('Распаковка шаблона'));
     execSync(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
-    const templateJSON = readFileSync(path.resolve(dir, 'package', 'template.json'), { encoding: 'utf-8' });
+    const packageDir = path.resolve(dir, 'package');
+    const templateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
     const templateData = JSON.parse(templateJSON);
 
     if (!Reflect.has(templateData, template)) {
@@ -81,9 +83,18 @@ export class Core {
       return;
     }
 
-    const templateValidator = new TemplateValidator(templateData[template]);
+    const pickedTemplate = templateData[template];
+    const { devDependencies, ...projectFields } = pickedTemplate.package;
 
-    templateValidator.validate();
+    const templateValidator = new TemplateValidator(pickedTemplate);
+    const valid = templateValidator.validate();
+
+    if (!valid) {
+      return;
+    }
+
+    mergeJSONFile(path.resolve(packageDir, 'project', 'package.json'), projectFields);
+    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
   }
 
 }

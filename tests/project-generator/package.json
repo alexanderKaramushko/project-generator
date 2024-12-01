@@ -11,8 +11,5 @@
     "project-generator-cli-js": "../../packages/project-generator-cli-js"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "install": "^0.13.0"
-  }
+  "license": "ISC"
 }

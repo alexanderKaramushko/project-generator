@@ -14,5 +14,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 export function mergeJSONFile(name: string, mergedContent: Record<string, any>): void {
   const content = readFileSync(name, { encoding: 'utf8' });
 
-  writeFileSync(name, JSON.stringify(merge(JSON.parse(content), mergedContent)));
+  writeFileSync(name,
+    JSON.stringify(
+      merge(JSON.parse(content), mergedContent),
+      (key, value) => value,
+      2,
+    ));
 }
