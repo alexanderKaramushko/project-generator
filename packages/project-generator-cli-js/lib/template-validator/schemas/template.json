@@ -11,11 +11,11 @@
     "configs": {
       "type": "object",
       "properties": {
-        "eslintConfig": {
+        "eslint": {
           "description": "Конфиг eslint",
           "$ref": "https://json.schemastore.org/eslintrc.json"
         },
-        "typescriptConfig": {
+        "typescript": {
           "description": "Конфиг typescript",
           "$ref": "https://json.schemastore.org/tsconfig"
         }
