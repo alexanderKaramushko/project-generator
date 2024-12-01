@@ -78,6 +78,7 @@ export class Core {
     if (!Reflect.has(templateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
       execSync(`rm -r ${dir}`);
+      return;
     }
 
     const templateValidator = new TemplateValidator(templateData[template]);
