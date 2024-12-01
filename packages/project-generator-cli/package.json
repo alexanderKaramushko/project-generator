@@ -15,7 +15,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexanderKaramushko/project-generator"
+    "url": "https://github.com/alexanderKaramushko/project-generator",
+    "directory": "packages/project-generator-cli"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
