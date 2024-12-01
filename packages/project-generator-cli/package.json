@@ -24,7 +24,7 @@
     "project-generator": "./bin/project-generator.js"
   },
   "scripts": {
-    "prepublishOnly": "clean-package",
+    "prepublishOnly": "npm run build && clean-package",
     "start": "cross-env NODE_ENV=develop nodemon lib/index.ts",
     "build": "tsx esbuild/esbuild.prod.ts"
   },
