@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./node_modules/.bin/project-generator"
+    "start": "node ./node_modules/.bin/project-generator-cli-js"
   },
   "devDependencies": {
-    "project-generator": "../../packages/project-generator"
+    "project-generator-cli-js": "../../packages/project-generator-cli-js"
   },
   "author": "",
   "license": "ISC",

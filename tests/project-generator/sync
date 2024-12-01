@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~/Documents/project-generator/packages/project-generator
+cd ~/Documents/project-generator/packages/project-generator-cli-js
 npm run build
 cd ~/Documents/project-generator/tests/project-generator
 npm install

@@ -16,12 +16,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/alexanderKaramushko/project-generator",
-    "directory": "packages/project-generator-cli"
+    "directory": "packages/project-generator-cli-js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "project-generator": "./bin/project-generator.js"
+    "project-generator-cli-js": "./bin/project-generator-cli-js.js"
   },
   "scripts": {
     "prepublishOnly": "npm run build && clean-package",
