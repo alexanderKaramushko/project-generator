@@ -20,7 +20,7 @@
           "$ref": "https://json.schemastore.org/tsconfig"
         }
       },
-      "required": ["eslintConfig", "typescriptConfig"]
+      "required": ["eslint", "typescript"]
     }
   },
   "required": ["package", "configs"]
