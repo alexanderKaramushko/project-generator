@@ -1,4 +1,4 @@
-import { existsSync, openSync, rmSync } from 'node:fs';
+import { existsSync, openSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { afterEach, describe, expect, test } from 'vitest';
@@ -29,5 +29,11 @@ describe('createRWFile', () => {
     } catch (error) {}
 
     expect(fd).not.toBe(null);
+  });
+
+  test('Добавление контента в файл', () => {
+    createRWFile(testFile, 'const w = 1;');
+
+    expect(readFileSync(testFile, { encoding: 'utf-8' })).toBe('const w = 1;');
   });
 });

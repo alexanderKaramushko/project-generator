@@ -8,7 +8,7 @@ import type { Template } from 'pg-template-starter';
 
 import { CLIStorage } from './CLIStorage';
 import { TemplateValidator } from './template-validator';
-import { mergeJSONFile } from './utils';
+import { createRWFile, mergeJSONFile } from './utils';
 
 function checkIfOnline() {
   return new Promise((resolve) => {
@@ -96,6 +96,12 @@ export class Core {
 
     mergeJSONFile(path.resolve(packageDir, 'project', 'package.json'), projectFields);
     mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
+
+    Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
+      if (content) {
+        createRWFile(path.resolve(packageDir, config), JSON.stringify(content));
+      }
+    });
   }
 
 }

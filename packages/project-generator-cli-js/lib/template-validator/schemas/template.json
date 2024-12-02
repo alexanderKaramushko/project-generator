@@ -11,16 +11,16 @@
     "configs": {
       "type": "object",
       "properties": {
-        "eslint": {
+        "eslint.config.js": {
           "description": "Конфиг eslint",
           "$ref": "https://json.schemastore.org/eslintrc.json"
         },
-        "typescript": {
+        "tsconfig.json": {
           "description": "Конфиг typescript",
           "$ref": "https://json.schemastore.org/tsconfig"
         }
       },
-      "required": ["eslint", "typescript"]
+      "required": ["eslint.config.js", "tsconfig.json"]
     }
   },
   "required": ["package", "configs"]
