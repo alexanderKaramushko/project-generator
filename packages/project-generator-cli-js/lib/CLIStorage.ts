@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import { program } from 'commander';
 import envinfo from 'envinfo';
+import type { Preset } from 'pg-template-starter';
 
 import packageJson from '../../../package.json';
 
@@ -16,7 +17,7 @@ export type CLIArguments = {
   /**
    * @description Выбор шаблона проекта.
    */
-  template: 'React' | 'NodeJS' | 'Typescript';
+  template: Preset;
 }
 
 /**
@@ -26,7 +27,7 @@ export class CLIStorage {
 
   private args: CLIArguments = {
     dir: '',
-    template: 'React',
+    template: 'react-typescript',
   }
 
   constructor() {

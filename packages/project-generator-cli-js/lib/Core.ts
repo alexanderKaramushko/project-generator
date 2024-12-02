@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import dns from 'dns';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import type { Template } from 'pg-template-starter';
 
 import { CLIStorage } from './CLIStorage';
 import { TemplateValidator } from './template-validator';
@@ -75,7 +76,7 @@ export class Core {
 
     const packageDir = path.resolve(dir, 'package');
     const templateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
-    const templateData = JSON.parse(templateJSON);
+    const templateData = JSON.parse(templateJSON) as Template;
 
     if (!Reflect.has(templateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));

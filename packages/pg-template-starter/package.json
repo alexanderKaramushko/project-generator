@@ -7,6 +7,7 @@
     "template"
   ],
   "main": ".",
+  "types": "./template.ts",
   "description": "Стартовый шаблон",
   "repository": {
     "type": "git",
