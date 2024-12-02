@@ -39,7 +39,7 @@
       }
     },
     "configs": {
-      "eslint": {
+      "eslint.config.js": {
         "env": {
           "browser": true
         },
@@ -198,7 +198,7 @@
           }
         ]
       },
-      "jest": {
+      "jest.config.ts": {
         "moduleFileExtensions": [
           "ts",
           "tsx",
@@ -219,7 +219,7 @@
         },
         "setupFilesAfterEnv": ["<rootDir>/jest/setup.js"]
       },
-      "typescript": {
+      "tsconfig.json": {
         "compilerOptions": {
           "target": "ESNext",
           "module": "ESNext",
