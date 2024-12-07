@@ -27,6 +27,8 @@
     "publish:pg-template-starter:major": "sh ./bump major pg-template-starter",
     "publish:project-generator-cli-js:minor": "sh ./bump minor project-generator-cli-js",
     "publish:project-generator-cli-js:major": "sh ./bump major project-generator-cli-js",
+    "publish:pg-template-structure:minor": "sh ./bump minor pg-template-structure",
+    "publish:pg-template-structure:major": "sh ./bump major pg-template-structure",
     "postinstall": "chmod +x ./bump"
   },
   "devDependencies": {
