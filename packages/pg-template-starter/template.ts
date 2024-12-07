@@ -2,11 +2,7 @@ import templateJSON from './template.json';
 
 export type Preset = keyof typeof templateJSON;
 
-type FileStructure = {
-    name: string;
-    content: string;
-    children: FileStructure[];
-}
+type FileStructureLibName = string;
 
 export type Template = Record<Preset, {
     package: Record<string, any>;
@@ -15,5 +11,5 @@ export type Template = Record<Preset, {
         'jest.config.ts'?: Record<string, any>;
         'tsconfig.json'?: Record<string, any>;
     };
-    fileStructure: FileStructure;
+    fileStructure: FileStructureLibName;
 }>

@@ -259,6 +259,7 @@
           }
         }
       }
-    }
+    },
+    "fileStructure": "pg-template-structure"
   }
 }
