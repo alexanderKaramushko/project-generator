@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import dns from 'dns';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { Template } from 'pg-template-starter';
 
@@ -95,7 +95,9 @@ export class Core {
       return;
     }
 
-    mergeJSONFile(path.resolve(packageDir, 'project', 'package.json'), projectFields);
+    const projectDir = path.resolve(packageDir, 'project');
+
+    mergeJSONFile(path.resolve(projectDir, 'package.json'), projectFields);
     mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
 
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
@@ -103,6 +105,22 @@ export class Core {
         createRWFile(path.resolve(packageDir, config), JSON.stringify(content));
       }
     });
+
+    console.log(chalk.blue('Скачивание стартовой файловой структуры'));
+    execSync(`npm pack ${pickedTemplate.fileStructure} --pack-destination ${dir}`);
+
+    console.log(chalk.blue('Распаковка файловой структуры'));
+    execSync(`tar -xvf ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz`);
+
+    const filesPresets = path.resolve(packageDir, 'presets');
+    const fileStructureDir = path.resolve(filesPresets, template);
+    const structureList = readdirSync(fileStructureDir);
+
+    structureList.forEach((name) => {
+      execSync(`mv -n ${path.resolve(filesPresets, template, name)} ${projectDir}`);
+    });
+
+    execSync(`rm -rf ${filesPresets}`);
   }
 
 }
