@@ -21,6 +21,10 @@
         }
       },
       "required": ["eslint.config.js", "tsconfig.json"]
+    },
+    "fileStructure": {
+      "description": "Название библиотеки, из которой берется структура проекта",
+      "type": "string"
     }
   },
   "required": ["package", "configs"]
