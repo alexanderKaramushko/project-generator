@@ -6,7 +6,7 @@
     "project-generator",
     "files"
   ],
-  "main": ".",
+  "main": "./presets",
   "description": "Стартовые внутренние файловые структуры проектов по пресетам",
   "repository": {
     "type": "git",
