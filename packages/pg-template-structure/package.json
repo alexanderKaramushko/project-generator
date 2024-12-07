@@ -1,0 +1,20 @@
+{
+  "name": "pg-template-structure",
+  "version": "1.0.0",
+  "keywords": [
+    "starter-structure",
+    "project-generator",
+    "files"
+  ],
+  "main": ".",
+  "description": "Стартовые внутренние файловые структуры проектов по пресетам",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator.git",
+    "directory": "packages/pg-template-structure"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}

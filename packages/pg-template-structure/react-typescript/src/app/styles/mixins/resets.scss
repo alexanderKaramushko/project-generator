@@ -1,0 +1,7 @@
+@mixin noFocus() {
+
+  &:focus,
+  &:focus-within {
+    outline: none !important;
+  }
+}
