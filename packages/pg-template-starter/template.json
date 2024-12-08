@@ -260,6 +260,7 @@
         }
       }
     },
-    "fileStructure": "pg-template-structure"
+    "fileStructure": "pg-template-structure",
+    "builder": "esbuild"
   }
 }
