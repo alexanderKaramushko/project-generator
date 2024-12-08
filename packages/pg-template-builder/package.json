@@ -1,0 +1,20 @@
+{
+  "name": "pg-template-builder",
+  "version": "1.0.0",
+  "keywords": [
+    "starter-builder",
+    "project-generator",
+    "builders"
+  ],
+  "main": "./presets",
+  "description": "Сборщики проектов",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator.git",
+    "directory": "packages/pg-template-builder"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}
