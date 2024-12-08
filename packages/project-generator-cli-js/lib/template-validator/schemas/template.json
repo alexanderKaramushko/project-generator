@@ -25,6 +25,11 @@
     "fileStructure": {
       "description": "Название библиотеки, из которой берется структура проекта",
       "type": "string"
+    },
+    "builder": {
+      "description": "Название сборшика проекта",
+      "type": "string",
+      "pattern": "esbuild|vite"
     }
   },
   "required": ["package", "configs"]
