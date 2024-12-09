@@ -9,8 +9,11 @@
   ],
   "description": "Сборщик на основе esbuild",
   "scripts": {
-    "start:dev": "cross-env ENV_NAME=.develop ts-node esbuild/esbuild.dev.ts",
+    "start": "cross-env ENV_NAME=.develop ts-node esbuild/esbuild.dev.ts",
     "build": "tsx esbuild/esbuild.prod.ts && tsc-alias -p tsconfig.alias.json"
+  },
+  "bin": {
+    "esbuild-cli": "./bin/esbuild-cli.js"
   },
   "devDependencies": {
     "@svgr/core": "^8.1.0",
@@ -29,7 +32,8 @@
     "sass-loader": "13.2.0",
     "tsc-alias": "1.8.8",
     "tsx": "^4.16.2",
-    "cross-env": "7.0.3"
+    "cross-env": "7.0.3",
+    "cross-spawn": "7.0.3"
   },
   "peerDependenciea": {
     "tsc-alias": "1.8.8"
