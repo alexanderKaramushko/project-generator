@@ -111,12 +111,6 @@ export class Core {
 
     const projectDir = path.resolve(packageDir, 'project');
 
-    mergeJSONFile(path.resolve(projectDir, 'package.json'), projectFields);
-    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies: {
-      ...devDependencies,
-      [`${pickedBuilder}-cli`]: 'latest',
-    } });
-
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
       if (content) {
         createRWFile(path.resolve(packageDir, config), JSON.stringify(content));
@@ -138,6 +132,12 @@ export class Core {
     });
 
     execSync(`rm -rf ${filesPresets}`);
+
+    mergeJSONFile(path.resolve(projectDir, 'package.json'), projectFields);
+    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies: {
+      ...devDependencies,
+      [`pg-template-builder-${pickedBuilder}`]: 'latest',
+    } });
   }
 
 }
