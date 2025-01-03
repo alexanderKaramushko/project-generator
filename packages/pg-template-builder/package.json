@@ -6,7 +6,7 @@
     "project-generator",
     "builders"
   ],
-  "main": "./presets",
+  "main": "./builders",
   "description": "Сборщики проектов",
   "repository": {
     "type": "git",

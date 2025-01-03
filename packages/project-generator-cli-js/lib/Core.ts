@@ -98,6 +98,8 @@ export class Core {
     }
 
     const pickedTemplate = templateData[template];
+    const pickedBuilder = pickedTemplate.builder;
+
     const { devDependencies, ...projectFields } = pickedTemplate.package;
 
     const templateValidator = new TemplateValidator(pickedTemplate);
@@ -110,7 +112,10 @@ export class Core {
     const projectDir = path.resolve(packageDir, 'project');
 
     mergeJSONFile(path.resolve(projectDir, 'package.json'), projectFields);
-    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
+    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies: {
+      ...devDependencies,
+      [`${pickedBuilder}-cli`]: 'latest',
+    } });
 
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
       if (content) {

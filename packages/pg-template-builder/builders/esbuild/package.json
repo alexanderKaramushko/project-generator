@@ -10,10 +10,10 @@
   "description": "Сборщик на основе esbuild",
   "scripts": {
     "start": "cross-env ENV_NAME=.develop ts-node esbuild/esbuild.dev.ts",
-    "build": "tsx esbuild/esbuild.prod.ts && tsc-alias -p tsconfig.alias.json"
+    "build": "cross-env ENV_NAME=.production && tsx esbuild/esbuild.prod.ts && tsc-alias -p tsconfig.alias.json"
   },
   "bin": {
-    "esbuild-cli": "./bin/esbuild-cli.js"
+    "pg-template-builder": "./bin/esbuild-cli.js"
   },
   "devDependencies": {
     "@svgr/core": "^8.1.0",
