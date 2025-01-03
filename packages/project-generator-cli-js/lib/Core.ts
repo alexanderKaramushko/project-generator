@@ -74,6 +74,7 @@ export class Core {
       console.log(chalk.green('Вы в сети'));
     } else {
       console.log(chalk.red('Похоже, что вы отключены от сети'));
+      process.exit(1);
     }
 
     console.log(chalk.blue(`Переходим в директорию ${dir}`));
