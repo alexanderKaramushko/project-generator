@@ -109,8 +109,6 @@ export class Core {
       return;
     }
 
-    const projectDir = path.resolve(packageDir, 'project');
-
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
       if (content) {
         createRWFile(path.resolve(packageDir, config), JSON.stringify(content));
@@ -122,6 +120,8 @@ export class Core {
 
     console.log(chalk.blue('Распаковка файловой структуры'));
     execSync(`tar -xvf ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz`);
+
+    const projectDir = path.resolve(packageDir, 'project');
 
     const filesPresets = path.resolve(packageDir, 'presets');
     const fileStructureDir = path.resolve(filesPresets, template);
@@ -138,6 +138,15 @@ export class Core {
       ...devDependencies,
       [`pg-template-builder-${pickedBuilder}`]: 'latest',
     } });
+
+    console.log(chalk.blue('Установка зависимостей'));
+
+    // Решение проблемы со установкой пакетов шаблона
+    execSync(`cd ${packageDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
+    execSync(`cd ${packageDir} && npm install`);
+    // Решение проблемы со установкой пакетов шаблона
+    execSync(`cd ${projectDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
+    execSync(`cd ${projectDir} && npm install`);
   }
 
 }
