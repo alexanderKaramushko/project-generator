@@ -1,12 +1,15 @@
 {
   "name": "pg-template-starter",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "keywords": [
     "starter-pack",
     "project-generator",
     "template"
   ],
   "main": ".",
+  "files": [
+    ".npmrc"
+  ],
   "types": "./template.ts",
   "description": "Стартовый шаблон",
   "repository": {
