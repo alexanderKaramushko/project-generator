@@ -13,6 +13,9 @@
     "url": "https://github.com/alexanderKaramushko/project-generator.git",
     "directory": "packages/pg-template-builder"
   },
+  "bin": {
+    "pg-template-builder-cli": "./bin/pg-template-builder-cli"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=14"
