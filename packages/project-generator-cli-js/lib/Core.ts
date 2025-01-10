@@ -98,8 +98,6 @@ export class Core {
     }
 
     const pickedTemplate = templateData[template];
-    const pickedBuilder = pickedTemplate.builder;
-
     const { devDependencies, ...projectFields } = pickedTemplate.package;
 
     const templateValidator = new TemplateValidator(pickedTemplate);
@@ -133,11 +131,13 @@ export class Core {
 
     execSync(`rm -rf ${filesPresets}`);
 
-    mergeJSONFile(path.resolve(projectDir, 'package.json'), projectFields);
-    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies: {
-      ...devDependencies,
-      [`pg-template-builder-${pickedBuilder}`]: 'latest',
-    } });
+    mergeJSONFile(path.resolve(projectDir, 'package.json'), {
+      ...projectFields,
+      devDependencies: {
+        'pg-template-builder': 'latest',
+      },
+    });
+    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
 
     console.log(chalk.blue('Установка зависимостей'));
 
