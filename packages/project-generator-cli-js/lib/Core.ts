@@ -152,6 +152,11 @@ export class Core {
     // Решение проблемы со установкой пакетов шаблона
     execSync(`cd ${projectDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
     execSync(`cd ${projectDir} && npm install`);
+
+    console.log(chalk.blue('Подготовка проекта'));
+
+    execSync(`cd ${packageDir} && yarn lint:fix`);
+    execSync(`cd ${packageDir} && git init && git add . && git commit -m 'initial commit'`);
   }
 
 }
