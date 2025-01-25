@@ -17,9 +17,5 @@
   "license": "MIT",
   "engines": {
     "node": ">=14"
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
   }
 }

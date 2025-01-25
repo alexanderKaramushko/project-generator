@@ -88,16 +88,18 @@ export class Core {
     execSync(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} && rm ${normalizedDir}pg-template-starter-*.tgz`);
 
     const packageDir = path.resolve(dir, 'package');
-    const templateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
-    const templateData = JSON.parse(templateJSON) as Template;
+    const starterPackageJSON = readFileSync(path.resolve(packageDir, 'package.json'), { encoding: 'utf-8' });
+    const starterTemplateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
+    const starterTemplateData = JSON.parse(starterTemplateJSON) as Template;
+    const starterPackageJSONData = JSON.parse(starterPackageJSON) as Record<string, any>;
 
-    if (!Reflect.has(templateData, template)) {
+    if (!Reflect.has(starterTemplateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
       execSync(`rm -r ${dir}`);
       return;
     }
 
-    const pickedTemplate = templateData[template];
+    const pickedTemplate = starterTemplateData[template];
     const { devDependencies, ...projectFields } = pickedTemplate.package;
 
     const templateValidator = new TemplateValidator(pickedTemplate);
@@ -137,7 +139,10 @@ export class Core {
         'pg-template-builder': 'latest',
       },
     });
-    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies });
+    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies,
+      scripts: {
+        ...starterPackageJSONData.scripts,
+      } });
 
     console.log(chalk.blue('Установка зависимостей'));
 
