@@ -18,7 +18,9 @@
       },
       "scripts": {
         "start": "pg-template-builder start",
-        "build": "pg-template-builder build"
+        "build": "pg-template-builder build",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix"
       },
       "dependencies": {
         "react": "18.0.0",
