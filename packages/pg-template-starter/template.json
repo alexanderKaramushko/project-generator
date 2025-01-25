@@ -43,165 +43,144 @@
       }
     },
     "configs": {
-      "eslint.config.js": {
-        "env": {
-          "browser": true
-        },
-        "parser": "@typescript-eslint/parser",
-        "extends": [
-          "require.resolve(\"eslint-config-airbnb/base\")",
-          "plugin:import/errors",
-          "plugin:import/warnings",
-          "plugin:@typescript-eslint/recommended"
-        ],
-        "plugins": [
-          "@typescript-eslint",
-          "simple-import-sort",
-          "import"
-        ],
-        "rules": {
-          "no-use-before-define": "off",
-          "no-unused-vars": "off",
-          "no-shadow": "off",
-          "implicit-arrow-linebreak": "off",
-          "import/prefer-default-export": "off",
-          "import/no-unresolved": "off",
-          "linebreak-style": "off",
-          "@typescript-eslint/no-unused-vars": [
-            "error",
-            {
-              "args": "after-used",
-              "vars": "all",
-              "ignoreRestSiblings": false
-            }
-          ],
-          "padding-line-between-statements": [
-            "error",
-            {
-              "blankLine": "always",
-              "prev": "*",
-              "next": "block-like"
-            },
-            {
-              "blankLine": "always",
-              "prev": "block-like",
-              "next": "*"
-            },
-            {
-              "blankLine": "always",
-              "prev": ["const", "let"],
-              "next": ["block-like", "expression"]
-            }
-          ],
-          "object-property-newline": "error",
-          "sort-keys": [
-            "error",
-            "asc",
-            {
-              "caseSensitive": true,
-              "natural": false
-            }
-          ],
-          "object-curly-newline": [
-            "error",
-            {
-              "ObjectPattern": {
-                "multiline": true
-              },
-              "ExportDeclaration": {
-                "multiline": true,
-                "minProperties": 3
-              }
-            }
-          ],
-          "lines-between-class-members": [
-            "error",
-            "always",
-            {
-              "exceptAfterSingleLine": true
-            }
-          ],
-          "padded-blocks": [
-            "error",
-            {
-              "classes": "always"
-            }
-          ],
-          "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-              "": "never",
-              "js": "never",
-              "json": "never",
-              "ts": "never",
-              "tsx": "never"
-            }
-          ],
-          "max-len": [
-            "error",
-            {
-              "code": 120,
-              "ignoreStrings": true,
-              "ignoreTemplateLiterals": true,
-              "ignoreUrls": true
-            }
-          ],
-          "no-console": "error",
-          "no-debugger": "error",
-          "no-multiple-empty-lines": [
-            "error",
-            {
-              "max": 1,
-              "maxBOF": 0,
-              "maxEOF": 0
-            }
-          ],
-          "quotes": ["error", "single"],
-          "@typescript-eslint/no-use-before-define": "error",
-          "@typescript-eslint/no-shadow": "error"
-        },
-        "settings": {
-          "import/extensions": [".ts", ".json"],
-          "import/parsers": {
-            "@typescript-eslint/parser": [".ts", ".json"]
-          },
-          "import/resolver": {
-            "node": {
-              "extensions": [".js", ".ts", ".tsx"]
-            }
-          }
-        },
-        "overrides": [
-          {
-            "files": ["*.ts"],
-            "rules": {
-              "simple-import-sort/imports": [
-                "error",
-                {
-                  "groups": [
-                    ["^@?\\w"],
-      
-                    ["^(src/core)(/.*|$)"],
-                    ["^(src/utils)(/.*|$)"],
-      
-                    ["^\\u0000"]
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "files": ["src/**/*.test.ts"],
-            "plugins": ["jest", "jest-formatting", "testing-library"],
-            "extends": [
-              "plugin:jest/recommended",
-              "plugin:jest-formatting/recommended"
-            ],
-            "rules": {}
-          }
-        ]
-      },
+      "eslint.config.mjs": [
+        "import antfu from '@antfu/eslint-config';",
+        "export default antfu(",
+        "{",
+        "typescript: {",
+        "overrides: {",
+        "'ts/no-use-before-define': 'error',",
+        "'ts/no-shadow': 'error',",
+        "'ts/no-unused-vars': [",
+        "'error',",
+        "{",
+        "args: 'after-used',",
+        "vars: 'all',",
+        "ignoreRestSiblings: false,",
+        "},",
+        "],",
+        "},",
+        "},",
+        "javascript: {",
+        "overrides: {",
+        "'no-unused-vars': 'off',",
+        "'no-shadow': 'off',",
+        "'implicit-arrow-linebreak': 'off',",
+        "'linebreak-style': 'off',",
+        "'padding-line-between-statements': [",
+        "'error',",
+        "{",
+        "blankLine: 'always',",
+        "prev: '*',",
+        "next: 'block-like',",
+        "},",
+        "{",
+        "blankLine: 'always',",
+        "prev: 'block-like',",
+        "next: '*',",
+        "},",
+        "{",
+        "blankLine: 'always',",
+        "prev: ['const', 'let'],",
+        "next: ['block-like', 'expression'],",
+        "},",
+        "],",
+        "'object-property-newline': 'error',",
+        "'object-curly-newline': [",
+        "'error',",
+        "{",
+        "ObjectPattern: {",
+        "multiline: true,",
+        "},",
+        "ExportDeclaration: {",
+        "multiline: true,",
+        "minProperties: 3,",
+        "},",
+        "},",
+        "],",
+        "'lines-between-class-members': [",
+        "'error',",
+        "'always',",
+        "{",
+        "exceptAfterSingleLine: true,",
+        "},",
+        "],",
+        "'padded-blocks': [",
+        "'error',",
+        "{",
+        "classes: 'always',",
+        "},",
+        "],",
+        "'max-len': [",
+        "'error',",
+        "{",
+        "code: 120,",
+        "ignoreStrings: true,",
+        "ignoreTemplateLiterals: true,",
+        "ignoreUrls: true,",
+        "},",
+        "],",
+        "'no-console': 'error',",
+        "'no-debugger': 'error',",
+        "'no-multiple-empty-lines': [",
+        "'error',",
+        "{",
+        "max: 1,",
+        "maxBOF: 0,",
+        "maxEOF: 0,",
+        "},",
+        "],",
+        "quotes: ['error', 'single'],",
+        "},",
+        "},",
+        "},",
+        "{",
+        "files: ['**/*.ts', '**/*.tsx'],",
+        "rules: {",
+        "'sort-keys': [",
+        "'error',",
+        "'asc',",
+        "{",
+        "caseSensitive: true,",
+        "natural: false,",
+        "},",
+        "],",
+        "},",
+        "},",
+        "{",
+        "rules: {",
+        "'import/prefer-default-export': 'off',",
+        "'import/no-unresolved': 'off',",
+        "'import/extensions': [",
+        "'error',",
+        "'ignorePackages',",
+        "{",
+        "'': 'never',",
+        "js: 'never',",
+        "json: 'never',",
+        "ts: 'never',",
+        "tsx: 'never',",
+        "},",
+        "],",
+        "'perfectionist/sort-imports': [",
+        "'error',",
+        "{",
+        "groups: [",
+        "'type',",
+        "['builtin', 'external'],",
+        "'internal-type',",
+        "'internal',",
+        "['parent-type', 'sibling-type', 'index-type'],",
+        "['parent', 'sibling', 'index'],",
+        "'object',",
+        "'unknown',",
+        "],",
+        "},",
+        "],",
+        "},",
+        "},",
+        ");"
+      ],
       "jest.config.ts": {
         "moduleFileExtensions": [
           "ts",

@@ -11,16 +11,19 @@
     "configs": {
       "type": "object",
       "properties": {
-        "eslint.config.js": {
+        "eslint.config.mjs": {
           "description": "Конфиг eslint",
-          "$ref": "https://json.schemastore.org/eslintrc.json"
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "tsconfig.json": {
           "description": "Конфиг typescript",
           "$ref": "https://json.schemastore.org/tsconfig"
         }
       },
-      "required": ["eslint.config.js", "tsconfig.json"]
+      "required": ["eslint.config.mjs", "tsconfig.json"]
     },
     "fileStructure": {
       "description": "Название библиотеки, из которой берется структура проекта",

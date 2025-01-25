@@ -109,7 +109,7 @@ export class Core {
 
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
       if (content) {
-        createRWFile(path.resolve(packageDir, config), JSON.stringify(content));
+        createRWFile(path.resolve(packageDir, config), content as string | string[]);
       }
     });
 
