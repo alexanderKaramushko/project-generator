@@ -18,49 +18,23 @@ function checkIfOnline() {
   });
 }
 
-// 2. извлечь данные по preset из template.json (возможно стоит избавиться от файловой структуры
-//    в пакете вообще и делать генерацию полностью из template.json)
-
-// 3. из извлеченных данных по preset смерджить с package.json следующие поля:
-//    – name (мерджиться в src)
-//    – keywords (мерджиться в src)
-//    – description (мерджиться в src)
-//    – repository (мерджиться в src)
-//    – engines (мерджиться в src)
-//    – dependencies (мерджиться в src)
-//    – devDependencies (мерджиться в root)
-
-// 4. Добавить build- и start-скрипты на основе builder, например: npm run start {package.builder}-cli start
-
-// 5. из извлеченных данных по preset создать следующие файлы в root, с наполнением из template.json:
-//    – eslintConfig
-//    – jestConfig
-//    – typescriptConfig
-
-// 6. из извлеченных данных по preset создать файловую структуру по схеме поля structure
-//    и записать в контент, если в схеме файл с полем content
-
-// 7. установить зависимости через npm в root и в src
-// 8. запустить линтинг по файлам
-// 9. инициализировать git и сделать начальный коммит
-
-// Насчет сборщика:
-// Нужно, чтобы в итоговом созданном шаблоне были обязательно два скрипта: start и build
-// Пример: "start": "esbuild-cli или pg-template-builder/esbuild-cli start"
-// То есть надо подумать как обращаться к внутренностям пакет, мб просто публиковать каждый билдер отдельным пакетом.
-
-// Или будет обращение к pg-template-builder с прокидыванием названия builder,
-// который он запустит: "start": "pg-template-builder start --builder esbuild"
-// Запускать будет через bin или workspaces
-
 /**
- * Класс скачивания пакета шаблонов и генерации проекта из шаблона.
+ * @namespace Core
+ * @description Класс генерации проекта из пресетов.
  */
 export class Core {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private CLI: CLIStorage) {}
 
+  /**
+   * @memberof Core
+   * @description
+   * 1. Скачивает и распаковывает стартовый шаблон
+   * 2. Скачивает стартовую структуру и устанавливает согласно пресету
+   * 3. Устанавливает зависимости
+   * 4. Подготовка (линтинг, гит)
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   async createApp() {
     const { dir, template } = this.CLI.getArgs();

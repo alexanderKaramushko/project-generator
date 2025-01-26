@@ -6,13 +6,19 @@ import chalk from 'chalk';
 import { eslintSchema, packageSchema, templateSchema, typescriptSchema } from './schemas';
 
 /**
- * Класс для валидации JSON шаблона.
+ * @namespace TemplateValidator
+ * @description Класс валидации JSON-схем.
  */
 export class TemplateValidator {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private template: Record<string, any>) {}
 
+  /**
+   * @memberof TemplateValidator
+   * @description Валидация package.json-, eslint- и typescript-схем
+   * @returns {boolean}
+   */
   validate() {
     const ajv = new Ajv({
       strict: false,

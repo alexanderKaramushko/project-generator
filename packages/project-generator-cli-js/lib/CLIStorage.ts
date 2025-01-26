@@ -21,10 +21,16 @@ export type CLIArguments = {
 }
 
 /**
- * Класс для сохранения передаваемых аргументов из CLI.
+ * @namespace CLIStorage
+ * @description Класс считывания аргументов CLI.
  */
 export class CLIStorage {
 
+  /**
+   * @typedef {Object} CLIArguments
+   * @property {string} dir Директория, в которой будет создано приложение.
+   * @property {object} template Выбор шаблона проекта.
+   */
   private args: CLIArguments = {
     dir: '',
     template: 'react-typescript',
@@ -95,12 +101,22 @@ export class CLIStorage {
     this.args.template = options.template;
   }
 
+  /**
+   * @memberof CLIStorage
+   * @description Логгирование переданных аргументов.
+   * @returns {void}
+   */
   public logArgs() {
     console.log(chalk.green('Переданные аргументы:'));
     console.table(this.args);
     console.log('');
   }
 
+  /**
+   * @memberof CLIStorage
+   * @description Получение всех переданных аргументов.
+   * @returns {CLIArguments}
+   */
   public getArgs() {
     return this.args;
   }

@@ -16,7 +16,7 @@ describe('mergeJSONfile', () => {
   });
 
   test('JSON-файл мерджится с переданным объектом', () => {
-    createRWFile(testFile);
+    createRWFile(testFile, 'file');
     writeFileSync(testFile, JSON.stringify({ name: 'value' }), { encoding: 'utf-8' });
 
     mergeJSONFile(testFile, {

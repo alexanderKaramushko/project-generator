@@ -13,13 +13,13 @@ describe('createRWFile', () => {
   });
 
   test('Файл успешно создается, если его нет', () => {
-    createRWFile(testFile);
+    createRWFile(testFile, 'file');
 
     expect(existsSync(testFile)).toBe(true);
   });
 
   test('Файл имеет правильные дескрипторы', () => {
-    createRWFile(testFile);
+    createRWFile(testFile, 'file');
 
     let fd: number | null = null;
 
