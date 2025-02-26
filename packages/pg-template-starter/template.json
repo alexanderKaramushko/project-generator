@@ -1,37 +1,75 @@
 {
   "react-typescript": {
-    "package": {
-      "name": "react-typescript-starter",
-      "keywords": [
-        "react",
-        "typescript",
-        "project"
-      ],
-      "description": "Стартовый шаблон проекта на React и Typescript",
-      "repository": {
-        "type": "git",
-        "url": "https://example.com",
-        "directory": "src"
+    "projects": {
+      "package.json": {
+        "name": "pg-template-structure",
+        "version": "1.0.0",
+        "description": "Стартовые внутренние файловые структуры проектов по пресетам",
+        "license": "MIT",
+        "repository": {
+          "type": "git",
+          "url": "https://github.com/alexanderKaramushko/project-generator.git",
+          "directory": "packages/pg-template-structure"
+        },
+        "keywords": [
+          "starter-structure",
+          "project-generator",
+          "files"
+        ],
+        "main": "./presets",
+        "engines": {
+          "node": ">=14"
+        },
+        "scripts": {
+          "lint": "eslint .",
+          "lint:fix": "eslint . --fix"
+        },
+        "devDependencies": {
+          "@antfu/eslint-config": "3.13.0",
+          "pg-template-builder": "latest",
+          "@types/jest": "^29.5.12",
+          "eslint": "9.17.0",
+          "jest": "29.4.1",
+          "ts-jest": "29.0.5",
+          "ts-node": "10.9.1",
+          "typescript": "^4.4.2"
+        }
       },
-      "engines": {
-        "node": ">=14"
-      },
-      "scripts": {
-        "start": "pg-template-builder-cli start",
-        "build": "pg-template-builder-cli build"
-      },
-      "dependencies": {
-        "react": "18.0.0",
-        "react-dom": "18.0.0"
-      },
-      "devDependencies": {
-        "@antfu/eslint-config": "3.13.0",
-        "eslint": "9.17.0",
-        "@types/jest": "^29.5.12",
-        "jest": "29.4.1",
-        "ts-jest": "29.0.5",
-        "ts-node": "10.9.1",
-        "typescript": "^4.4.2"
+      "project/package.json": {
+        "name": "react-typescript-starter",
+        "version": "1.0.0",
+        "description": "Стартовый шаблон проекта на React и Typescript",
+        "license": "MIT",
+        "repository": {
+          "type": "git",
+          "url": "https://example.com",
+          "directory": "src"
+        },
+        "keywords": [
+          "react",
+          "typescript",
+          "project"
+        ],
+        "main": ".",
+        "engines": {
+          "node": ">=14"
+        },
+        "scripts": {
+          "start": "pg-template-builder-cli start",
+          "build": "pg-template-builder-cli build"
+        },
+        "dependencies": {
+          "core-js": "^3.40.0",
+          "react": "18.0.0",
+          "react-dom": "18.0.0",
+          "react-router": "^7.2.0",
+          "react-router-dom": "^7.2.0"
+        },
+        "devDependencies": {
+          "@types/react": "^19.0.10",
+          "@types/react-dom": "^19.0.4",
+          "pg-template-builder": "latest"
+        }
       }
     },
     "configs": {
@@ -209,25 +247,27 @@
         },
         "setupFilesAfterEnv": ["<rootDir>/jest/setup.js"]
       },
-      "tsconfig.json": {
+      "project/tsconfig.json": {
         "compilerOptions": {
           "target": "ESNext",
+          "jsx": "react-jsx",
           "module": "ESNext",
           "moduleResolution": "node",
-          "baseUrl": ".",
           "paths": {
-            "src/*": [
+            "client/*": [
               "./src/*"
+            ],
+            "stories/*": [
+              "./stories/*"
             ]
           },
           "types": [
-            "jest",
-            "node"
+            "node",
+            "jest"
           ],
           "resolveJsonModule": true,
           "allowJs": true,
           "sourceMap": false,
-          "noEmit": true,
           "allowSyntheticDefaultImports": true,
           "esModuleInterop": true,
           "strict": true,
@@ -240,7 +280,13 @@
           "skipLibCheck": true
         },
         "include": [
-          "src/**/*"
+          "./src/**/*"
+        ],
+        "exclude": [
+          "src/**/*.test.ts",
+          "src/**/*.test.tsx",
+          "src/**/*/testHelpers/*.tsx",
+          "src/**/*/testHelpers/*.ts"
         ],
         "ts-node": {
           "esm": true,
@@ -248,6 +294,42 @@
             "module": "nodenext"
           }
         }
+      },
+      "tsconfig.json": {
+        "compilerOptions": {
+          "target": "ESNext",
+          "jsx": "react-jsx",
+          "experimentalDecorators": true,
+          "module": "ESNext",
+          "moduleResolution": "node",
+          "paths": {
+            "project/*": [
+              "./project/src/*"
+            ]
+          },
+          "resolveJsonModule": true,
+          "allowJs": true,
+          "strict": true,
+          "strictFunctionTypes": true,
+          "strictNullChecks": true,
+          "alwaysStrict": true,
+          "noImplicitAny": true,
+          "noImplicitReturns": true,
+          "noImplicitThis": true,
+          "allowSyntheticDefaultImports": true,
+          "esModuleInterop": true
+        },
+        "include": [
+          "project/src/**/*"
+        ]
+      },
+      "tsconfig.test.json": {
+        "extends": "./tsconfig.json",
+        "include": [
+          "src/test.ts",
+          "src/**/*.spec.ts",
+          "src/**/*.d.ts"
+        ]
       },
       ".gitignore": [
         ".env",
