@@ -17,8 +17,8 @@
         "node": ">=14"
       },
       "scripts": {
-        "start": "pg-template-builder start",
-        "build": "pg-template-builder build"
+        "start": "pg-template-builder-cli start",
+        "build": "pg-template-builder-cli build"
       },
       "dependencies": {
         "react": "18.0.0",
