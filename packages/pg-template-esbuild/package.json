@@ -1,0 +1,41 @@
+{
+  "name": "pg-template-esbuild",
+  "version": "1.1.0",
+  "keywords": [
+    "starter-builder",
+    "project-generator",
+    "builders",
+    "esbuild"
+  ],
+  "description": "Сборщик на основе esbuild",
+  "bin": {
+    "pg-template-esbuild-cli": "./bin/pg-template-esbuild-cli.js"
+  },
+  "devDependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@types/live-server": "1.2.1",
+    "css-loader": "6.7.3",
+    "esbuild": "0.15.13",
+    "esbuild-plugin-copy": "^2.1.1",
+    "esbuild-plugin-ignore": "1.1.1",
+    "esbuild-sass-plugin": "2.4.5",
+    "live-server": "1.2.2",
+    "postcss": "8.4.19",
+    "postcss-import": "15.0.1",
+    "postcss-modules": "6.0.0",
+    "sass-loader": "13.2.0",
+    "tsc-alias": "1.8.8",
+    "tsx": "^4.16.2",
+    "cross-env": "7.0.3",
+    "cross-spawn": "7.0.3"
+  },
+  "peerDependenciea": {
+    "tsc-alias": "1.8.8"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}
