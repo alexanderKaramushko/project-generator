@@ -4,11 +4,11 @@ import { appendFileSync, existsSync } from 'node:fs';
 /**
  * Создает файл с заданным именем для чтения и записи.
  *
- * @param {string} name - Имя файла c расширением, который нужно создать.
+ * @param {string} src - Путь до файла c расширением, который нужно создать.
  * @param {string | string[]} content - Контент файла.
  */
-export function createRWFile(name: string, content: string | string[]): void {
-  if (existsSync(name)) {
+export function createRWFile(src: string, content: string | string[]): void {
+  if (existsSync(src)) {
     return;
   }
 
@@ -21,7 +21,7 @@ export function createRWFile(name: string, content: string | string[]): void {
     _content = JSON.stringify(content);
   }
 
-  execSync(`touch ${name}`);
-  execSync(`chmod uo+rw ${name}`);
-  appendFileSync(name, _content, 'utf-8');
+  execSync(`touch ${src}`);
+  execSync(`chmod uo+rw ${src}`);
+  appendFileSync(src, _content, 'utf-8');
 }

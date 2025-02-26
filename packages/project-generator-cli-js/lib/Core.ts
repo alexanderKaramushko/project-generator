@@ -54,16 +54,14 @@ export class Core {
     console.log(chalk.blue(`Переходим в директорию ${dir}`));
 
     console.log(chalk.blue('Скачивание стартового шаблона'));
-    execSync(`npm pack pg-template-starter`);
+    execSync('npm pack pg-template-starter');
 
     console.log(chalk.blue('Распаковка шаблона'));
     execSync(`tar -xvf pg-template-starter-*.tgz -C ${dir} && rm pg-template-starter-*.tgz`);
 
     const packageDir = path.resolve(dir, 'package');
-    const starterPackageJSON = readFileSync(path.resolve(packageDir, 'package.json'), { encoding: 'utf-8' });
     const starterTemplateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
     const starterTemplateData = JSON.parse(starterTemplateJSON) as Template;
-    const starterPackageJSONData = JSON.parse(starterPackageJSON) as Record<string, any>;
 
     if (!Reflect.has(starterTemplateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
@@ -72,7 +70,6 @@ export class Core {
     }
 
     const pickedTemplate = starterTemplateData[template];
-    const { devDependencies, ...projectFields } = pickedTemplate.package;
 
     const templateValidator = new TemplateValidator(pickedTemplate);
     const valid = templateValidator.validate();
@@ -105,16 +102,11 @@ export class Core {
 
     execSync(`rm -rf ${filesPresets}`);
 
-    mergeJSONFile(path.resolve(projectDir, 'package.json'), {
-      ...projectFields,
-      devDependencies: {
-        'pg-template-builder': 'latest',
-      },
+    Object.entries(pickedTemplate.projects).forEach(([project, content]) => {
+      if (content) {
+        mergeJSONFile(path.resolve(packageDir, project), content);
+      }
     });
-    mergeJSONFile(path.resolve(packageDir, 'package.json'), { devDependencies,
-      scripts: {
-        ...starterPackageJSONData.scripts,
-      } });
 
     console.log(chalk.blue('Установка зависимостей'));
 

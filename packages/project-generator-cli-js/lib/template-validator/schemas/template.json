@@ -4,26 +4,29 @@
   "description": "Валидация полей для генерации проекта",
   "type": "object",
   "properties": {
-    "package": {
-      "description": "package.json",
-      "$ref": "https://json.schemastore.org/package.json"
+    "projects": {
+      "description": "package.json-ы проекта (название может включать путь)",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "https://json.schemastore.org/package.json"
+      }
     },
     "configs": {
+      "description": "Конфиги проекта (название может включать путь)",
       "type": "object",
-      "properties": {
-        "eslint.config.mjs": {
+      "oneOf": [
+        {
           "description": "Конфиг eslint",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "tsconfig.json": {
+        {
           "description": "Конфиг typescript",
           "$ref": "https://json.schemastore.org/tsconfig"
         }
-      },
-      "required": ["eslint.config.mjs", "tsconfig.json"]
+      ]
     },
     "fileStructure": {
       "description": "Название библиотеки, из которой берется структура проекта",
@@ -35,5 +38,5 @@
       "pattern": "esbuild|vite"
     }
   },
-  "required": ["package", "configs"]
+  "required": ["projects", "configs"]
 }
