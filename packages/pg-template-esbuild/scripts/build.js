@@ -17,7 +17,7 @@ const process = require('node:process');
 const postCssImport = require('postcss-import');
 
 const { execSync } = require('node:child_process');
-const { envPlugin, svgrPlugin, typeScriptDeclarationsPlugin } = require('./plugins');
+const { envPlugin, svgrPlugin, typeScriptDeclarationsPlugin } = require('../plugins');
 
 execSync('cross-env ENV_NAME=.production');
 

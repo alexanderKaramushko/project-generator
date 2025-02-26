@@ -16,7 +16,7 @@ const process = require('node:process');
 const postCssImport = require('postcss-import');
 
 const { execSync } = require('node:child_process');
-const { envPlugin, svgrPlugin } = require('./plugins');
+const { envPlugin, svgrPlugin } = require('../plugins');
 
 execSync('cross-env ENV_NAME=.develop');
 
