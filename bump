@@ -3,14 +3,24 @@
 version=$1
 workspace=$2
 
-npm version $version -w $workspace --no-git-tag-version
+echo $version
+echo $workspace
+
+cd packages/$workspace
+npm version $version --no-git-tag-version
 
 sleep 1
+
+cd ../../
 
 git add "./packages/$workspace/package.json"
 git add "./package-lock.json"
 
 git commit -m "$version-релиз пакета $workspace"
-npm publish -w $workspace
+
+cd packages/$workspace
+npm publish
+
+cd ../../
 
 [ $? -eq 1 ] && git reset --soft HEAD~1
