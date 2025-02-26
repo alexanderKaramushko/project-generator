@@ -1,4 +1,5 @@
 import { RouterProvider } from 'react-router';
+import { router } from './routing';
 
 import './styles/global.scss';
 
