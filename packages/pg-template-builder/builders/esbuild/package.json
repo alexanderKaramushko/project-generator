@@ -12,7 +12,7 @@
     "start": "cross-env ENV_NAME=.develop ts-node esbuild/esbuild.dev.ts",
     "build": "cross-env ENV_NAME=.production && tsx esbuild/esbuild.prod.ts && tsc-alias -p tsconfig.alias.json"
   },
-  "devDependencies": {
+  "dependencies": {
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
