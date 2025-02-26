@@ -1,4 +1,4 @@
-# Генератор проектов а-ля create-react-app
+# Генератор проектов а-ля create-react-app (черновой вариант!)
 
 Отличия от create-react-app
 
