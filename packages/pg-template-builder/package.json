@@ -1,6 +1,6 @@
 {
   "name": "pg-template-builder",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "keywords": [
     "starter-builder",
     "project-generator",
@@ -19,5 +19,8 @@
   "license": "MIT",
   "engines": {
     "node": ">=14"
+  },
+  "devDependencies": {
+    "pg-template-esbuild": "^1.0.0"
   }
 }

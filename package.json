@@ -31,6 +31,8 @@
     "publish:pg-template-structure:major": "sh ./bump major pg-template-structure",
     "publish:pg-template-builder:minor": "sh ./bump minor pg-template-builder",
     "publish:pg-template-builder:major": "sh ./bump major pg-template-builder",
+    "publish:pg-template-esbuild:minor": "sh ./bump minor pg-template-esbuild",
+    "publish:pg-template-esbuild:major": "sh ./bump major pg-template-esbuild",
     "postinstall": "chmod +x ./bump"
   },
   "devDependencies": {
