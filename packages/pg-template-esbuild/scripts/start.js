@@ -51,8 +51,8 @@ const env = cleanEnv(process.env, {
 });
 
 const globalModulePaths = [env.GLOBAL_SCSS_PATH];
-const scssVariablesFolder = path.join(__dirname, env.SCSS_VARIABLES_PATH);
-const scssMixinsFolder = path.join(__dirname, env.SCSS_MIXINS_PATH);
+const scssVariablesFolder = path.join(process.cwd(), env.SCSS_VARIABLES_PATH);
+const scssMixinsFolder = path.join(process.cwd(), env.SCSS_MIXINS_PATH);
 
 liveServer.start({
   host: env.HOST,
