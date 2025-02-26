@@ -21,6 +21,12 @@ function checkIfOnline() {
 /**
  * @namespace Core
  * @description Класс генерации проекта из пресетов.
+ *
+ * @todo Перевести пакеты на type: module
+ * @todo Удалить лишние артефакты из сборки пресета
+ * @todo Добавить файлы логов в пакеты
+ * @todo Добавить логи сборки
+ * @todo Проверить сборку на прод
  */
 export class Core {
 
