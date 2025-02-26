@@ -40,7 +40,6 @@ const env = cleanEnv(process.env, {
   GLOBAL_SCSS_PATH: str(),
   SCSS_VARIABLES_PATH: str(),
   SCSS_MIXINS_PATH: str(),
-  OPEN: bool({ default: false }),
 });
 
 const globalModulePaths = [env.GLOBAL_SCSS_PATH];

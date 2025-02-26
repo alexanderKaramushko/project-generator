@@ -59,7 +59,7 @@ liveServer.start({
   port: env.PORT,
   file: env.FILE,
   root: env.ROOT,
-  open: env.open,
+  open: env.OPEN,
 });
 
 const options = {
