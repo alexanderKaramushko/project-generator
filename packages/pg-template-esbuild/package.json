@@ -11,7 +11,7 @@
   "bin": {
     "pg-template-esbuild-cli": "./bin/pg-template-esbuild-cli.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
