@@ -1,6 +1,6 @@
 {
   "name": "pg-template-builder",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "keywords": [
     "starter-builder",
     "project-generator",
@@ -20,7 +20,7 @@
   "engines": {
     "node": ">=14"
   },
-  "devDependencies": {
+  "dependencies": {
     "pg-template-esbuild": "^1.0.0"
   }
 }
