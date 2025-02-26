@@ -8,4 +8,4 @@ const builderIndex = args.findIndex(
 
 const builder = builderIndex === -1 ? 'esbuild' : args[builderIndex].split('=')[1];
 
-execSync(`pg-template-${builder} build`);
+execSync(`pg-template-${builder}-cli build`);
