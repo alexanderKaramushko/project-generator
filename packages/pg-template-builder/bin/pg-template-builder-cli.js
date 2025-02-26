@@ -26,7 +26,7 @@ if (['build', 'start'].includes(script)) {
   const result = crossSpawn.sync(
     process.execPath,
     nodeArgs
-      .concat(require.resolve(`builders/${builder}/scripts/${script}`))
+      .concat(require.resolve(`../builders/${builder}/scripts/${script}`))
       .concat(args.slice(scriptIndex + 1)),
     { stdio: 'inherit' },
   );
