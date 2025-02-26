@@ -14,7 +14,7 @@
     "directory": "packages/pg-template-builder"
   },
   "bin": {
-    "pg-template-builder-cli": "./bin/pg-template-builder-cli"
+    "pg-template-builder-cli": "./bin/pg-template-builder-cli.js"
   },
   "license": "MIT",
   "engines": {
