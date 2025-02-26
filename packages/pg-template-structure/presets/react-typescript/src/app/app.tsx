@@ -1,5 +1,4 @@
 import { RouterProvider } from 'react-router';
-import withProviders from './providers';
 
 import './styles/global.scss';
 
@@ -11,4 +10,4 @@ export function App() {
   );
 }
 
-export default withProviders(App);
+export default App;
