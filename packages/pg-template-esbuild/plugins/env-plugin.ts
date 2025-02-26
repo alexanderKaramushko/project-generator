@@ -1,41 +1,45 @@
+/* eslint-disable sort-keys */
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 /**
  * @author rw3iss
  *
  * @see {@link https://github.com/rw3iss/esbuild-envfile-plugin}
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import process from 'node:process';
-import type { Plugin } from 'esbuild';
-import dotenv from 'dotenv';
+const fs = require('node:fs');
+const path = require('node:path');
+const dotenv = require('dotenv');
 
 const DEFAULT_ENV = process.env.NODE_ENV || 'development';
 
-function findEnvFile(dir: string, rootPath: string, env: string): string | undefined {
+function findEnvFile(dir, rootPath, env) {
   try {
     if (fs.existsSync(`${dir}/.${env}.env`)) {
       return `${dir}/.${env}.env`;
     }
-    else if (fs.existsSync(`${dir}/.env`)) {
+
+    if (fs.existsSync(`${dir}/.env`)) {
       return `${dir}/.env`;
     }
-    else if (dir && dir !== '/') {
+
+    if (dir && dir !== '/') {
       if (dir === rootPath) {
         return undefined;
       }
+
       const next = path.resolve(dir, '../');
       return findEnvFile(next, rootPath, env);
     }
+
     return undefined;
-  }
-  catch (e) {
+  } catch (e) {
     console.warn('Exception in esbuild-envfile-plugin findEnvFile():', e);
     return undefined;
   }
 }
 
-export default () => ({
+module.exports = () => ({
   name: 'env',
   setup(build) {
     build.onResolve({
@@ -64,14 +68,13 @@ export default () => ({
       if (envPath) {
         try {
           const data = await fs.promises.readFile(envPath, 'utf8');
-          // eslint-disable-next-line node/prefer-global/buffer
           const buf = Buffer.from(data);
+
           config = dotenv.parse(buf);
           contents = JSON.stringify({
             ...process.env, ...config,
           });
-        }
-        catch (e) {
+        } catch (e) {
           console.warn('Exception in esbuild-envfile-plguin build.onLoad():', e);
         }
       }
@@ -82,4 +85,4 @@ export default () => ({
       };
     });
   },
-} as Plugin);
+});

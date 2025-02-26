@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /**
  * @author Kazi Jawad
  * @description Доработанный плагин, загрузка ?url обрабатывается в esbuild
@@ -5,12 +6,10 @@
  * @see {@link https://github.com/kazijawad/esbuild-plugin-svgr}
  */
 
-import { readFileSync } from 'node:fs';
-import type { Config } from '@svgr/core';
-import { transform } from '@svgr/core';
-import type { Plugin } from 'esbuild';
+const { readFileSync } = require('node:fs');
+const { transform } = require('@svgr/core');
 
-export default (options: Config = {}) => ({
+module.exports = (options) => ({
   name: 'svgr',
   setup(build) {
     build.onResolve({
@@ -51,4 +50,4 @@ export default (options: Config = {}) => ({
       };
     });
   },
-}) as Plugin;
+});

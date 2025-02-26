@@ -1,7 +1,6 @@
-import type { Plugin } from 'esbuild';
 import { execSync } from 'node:child_process';
 
-export default () => ({
+module.exports = () => ({
   name: 'TypeScriptDeclarationsPlugin',
   setup(build) {
     build.onEnd((result) => {
@@ -12,4 +11,4 @@ export default () => ({
       execSync('tsc --p tsconfig.declaration.json');
     });
   },
-}) as Plugin;
+});

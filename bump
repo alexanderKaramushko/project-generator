@@ -13,7 +13,7 @@ sleep 1
 
 cd ../../
 
-git add "./packages/$workspace/package.json"
+git add "./packages/$workspace/*"
 git add "./package-lock.json"
 
 git commit -m "$version-релиз пакета $workspace"
