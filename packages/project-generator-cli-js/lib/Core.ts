@@ -54,12 +54,10 @@ export class Core {
     console.log(chalk.blue(`Переходим в директорию ${dir}`));
 
     console.log(chalk.blue('Скачивание стартового шаблона'));
-    execSync(`npm pack pg-template-starter --pack-destination ${dir}`);
-
-    const normalizedDir = dir.endsWith('/') ? dir : `${dir}/`;
+    execSync(`npm pack pg-template-starter`);
 
     console.log(chalk.blue('Распаковка шаблона'));
-    execSync(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} && rm ${normalizedDir}pg-template-starter-*.tgz`);
+    execSync(`tar -xvf pg-template-starter-*.tgz -C ${dir} && rm pg-template-starter-*.tgz`);
 
     const packageDir = path.resolve(dir, 'package');
     const starterPackageJSON = readFileSync(path.resolve(packageDir, 'package.json'), { encoding: 'utf-8' });
@@ -90,10 +88,10 @@ export class Core {
     });
 
     console.log(chalk.blue('Скачивание стартовой файловой структуры'));
-    execSync(`npm pack ${pickedTemplate.fileStructure} --pack-destination ${dir}`);
+    execSync(`npm pack ${pickedTemplate.fileStructure}`);
 
     console.log(chalk.blue('Распаковка файловой структуры'));
-    execSync(`tar -xvf ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz`);
+    execSync(`tar -xvf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`);
 
     const projectDir = path.resolve(packageDir, 'project');
 
@@ -122,10 +120,10 @@ export class Core {
 
     // Решение проблемы со установкой пакетов шаблона
     execSync(`cd ${packageDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-    execSync(`cd ${packageDir} && npm install`);
+    execSync(`cd ${packageDir} && npm install --legacy-peer-deps`);
     // Решение проблемы со установкой пакетов шаблона
     execSync(`cd ${projectDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-    execSync(`cd ${projectDir} && npm install`);
+    execSync(`cd ${projectDir} && npm install --legacy-peer-deps`);
 
     console.log(chalk.blue('Подготовка проекта'));
 
