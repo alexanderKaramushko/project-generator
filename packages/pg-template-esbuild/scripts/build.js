@@ -16,14 +16,13 @@ const process = require('node:process');
 // @ts-expect-error: no @types
 const postCssImport = require('postcss-import');
 
-const { execSync } = require('node:child_process');
 const envPlugin = require('../plugins/env-plugin');
 const svgrPlugin = require('../plugins/svgr-plugin');
 const typeScriptDeclarationsPlugin = require('../plugins/typescript-declaration-plugin');
 
-execSync('cross-env ENV_NAME=.production');
-
-dotenv.config();
+dotenv.config({
+  path: path.join(process.cwd(), './.production.env'),
+});
 
 const env = cleanEnv(process.env, {
   ENTRY: str({
