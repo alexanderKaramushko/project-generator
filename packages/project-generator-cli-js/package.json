@@ -1,6 +1,6 @@
 {
   "name": "project-generator-cli-js",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "CLI для генерации проекта из шаблонов",
   "keywords": [
     "typescript",
@@ -38,7 +38,8 @@
     "envinfo": "^7.13.0",
     "lodash.merge": "^4.6.2",
     "pg-template-starter": "*",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "yocto-spinner": "^0.2.0"
   },
   "devDependencies": {
     "@types/envinfo": "^7.8.4",

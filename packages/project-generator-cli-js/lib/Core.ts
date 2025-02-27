@@ -5,6 +5,7 @@ import dns from 'dns';
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { Template } from 'pg-template-starter';
+import yoctoSpinner from 'yocto-spinner';
 
 import { CLIStorage } from './CLIStorage';
 import { TemplateValidator } from './template-validator';
@@ -44,9 +45,10 @@ export class Core {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   async createApp() {
     const { dir, template } = this.CLI.getArgs();
+    const spinner = yoctoSpinner().start();
 
     if (!existsSync(dir)) {
-      console.log(chalk.blue(`Указанной директории ${dir} нет, создаем`));
+      spinner.text = chalk.blue(`Указанной директории ${dir} нет, создаем...`);
       mkdirSync(dir, { recursive: true });
     }
 
@@ -57,13 +59,11 @@ export class Core {
       process.exit(1);
     }
 
-    console.log(chalk.blue(`Переходим в директорию ${dir}`));
+    spinner.text = chalk.blue('Скачивание стартового шаблона...');
+    execSync('npm pack pg-template-starter -s');
 
-    console.log(chalk.blue('Скачивание стартового шаблона'));
-    execSync('npm pack pg-template-starter');
-
-    console.log(chalk.blue('Распаковка шаблона'));
-    execSync(`tar -xvf pg-template-starter-*.tgz -C ${dir} && rm pg-template-starter-*.tgz`);
+    spinner.text = chalk.blue('Распаковка шаблона...');
+    execSync(`tar -xf pg-template-starter-*.tgz -C ${dir} && rm pg-template-starter-*.tgz`);
 
     const packageDir = path.resolve(dir, 'package');
     const starterTemplateJSON = readFileSync(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
@@ -72,6 +72,8 @@ export class Core {
     if (!Reflect.has(starterTemplateData, template)) {
       console.log(chalk.red('Не найден шаблон! Похоже, передан неверный template'));
       execSync(`rm -r ${dir}`);
+      spinner.stop();
+
       return;
     }
 
@@ -84,17 +86,18 @@ export class Core {
       return;
     }
 
+    spinner.text = chalk.blue('Создание конфигов...');
     Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
       if (content) {
         createRWFile(path.resolve(packageDir, config), content as string | string[]);
       }
     });
 
-    console.log(chalk.blue('Скачивание стартовой файловой структуры'));
-    execSync(`npm pack ${pickedTemplate.fileStructure}`);
+    spinner.text = chalk.blue('Скачивание стартовой файловой структуры');
+    execSync(`npm pack ${pickedTemplate.fileStructure} -s`);
 
-    console.log(chalk.blue('Распаковка файловой структуры'));
-    execSync(`tar -xvf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`);
+    spinner.text = chalk.blue('Распаковка файловой структуры');
+    execSync(`tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`);
 
     const projectDir = path.resolve(packageDir, 'project');
 
@@ -102,31 +105,35 @@ export class Core {
     const fileStructureDir = path.resolve(filesPresets, template);
     const structureList = readdirSync(fileStructureDir);
 
+    spinner.text = chalk.blue('Создание структуры пресета...');
     structureList.forEach((name) => {
       execSync(`mv -n ${path.resolve(filesPresets, template, name)} ${projectDir}`);
     });
 
     execSync(`rm -rf ${filesPresets}`);
 
+    spinner.text = chalk.blue('Создание пакетов...');
     Object.entries(pickedTemplate.projects).forEach(([project, content]) => {
       if (content) {
         mergeJSONFile(path.resolve(packageDir, project), content);
       }
     });
 
-    console.log(chalk.blue('Установка зависимостей'));
+    spinner.text = chalk.blue('Установка зависимостей...');
 
     // Решение проблемы со установкой пакетов шаблона
     execSync(`cd ${packageDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-    execSync(`cd ${packageDir} && npm install --legacy-peer-deps`);
+    execSync(`cd ${packageDir} && npm install --legacy-peer-deps -s`);
     // Решение проблемы со установкой пакетов шаблона
     execSync(`cd ${projectDir} && npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-    execSync(`cd ${projectDir} && npm install --legacy-peer-deps`);
+    execSync(`cd ${projectDir} && npm install --legacy-peer-deps -s`);
 
-    console.log(chalk.blue('Подготовка проекта'));
+    spinner.text = chalk.blue('Подготовка проекта...');
 
     execSync(`cd ${packageDir} && yarn lint:fix`);
     execSync(`cd ${packageDir} && git init && git add . && git commit -m 'initial commit'`);
+
+    spinner.stop(chalk.green('Готово •͡˘㇁•͡˘'));
   }
 
 }
