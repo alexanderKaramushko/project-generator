@@ -7,7 +7,7 @@ import path from 'node:path';
 import type { Template } from 'pg-template-starter';
 import yoctoSpinner from 'yocto-spinner';
 
-import { CLIStorage } from './CLIStorage';
+import { CLIAbstractParser } from './CLIAbstractParser';
 import { TemplateValidator } from './template-validator';
 import { createRWFile, mergeJSONFile } from './utils';
 
@@ -32,7 +32,7 @@ function checkIfOnline() {
 export class Core {
 
   // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(private CLI: CLIStorage) {}
+  constructor(private CLI: CLIAbstractParser) {}
 
   /**
    * @memberof Core

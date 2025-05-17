@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export * from './CLIStorage';
+export * from './CLIInputParser';
+export * from './CLIPromtsParser';
 export * from './Core';
 

@@ -2,41 +2,21 @@
 import chalk from 'chalk';
 import { program } from 'commander';
 import envinfo from 'envinfo';
-import type { Preset } from 'pg-template-starter';
 
 import packageJson from '../../../package.json';
+import { CLIAbstractParser } from './CLIAbstractParser';
 
 /**
- * @description Аргументы командной строки.
+ * @namespace CLIInputParser
+ * @description Класс считывания аргументов CLI as is.
  */
-export type CLIArguments = {
-  /**
-   * @description Директория, в которой будет создано приложение.
-   */
-  dir: string;
-  /**
-   * @description Выбор шаблона проекта.
-   */
-  template: Preset;
-}
-
-/**
- * @namespace CLIStorage
- * @description Класс считывания аргументов CLI.
- */
-export class CLIStorage {
+export class CLIInputParser extends CLIAbstractParser {
 
   /**
-   * @typedef {Object} CLIArguments
-   * @property {string} dir Директория, в которой будет создано приложение.
-   * @property {object} template Выбор шаблона проекта.
+   * @memberof CLIInputParser
+   * @description Парсит аргументы введеные вручную в коммандную строку.
    */
-  private args: CLIArguments = {
-    dir: '',
-    template: 'react-typescript',
-  }
-
-  constructor() {
+  async parseInput() {
     program
       .name('project-generator')
       .description('Генератор шаблонов')
@@ -99,26 +79,6 @@ export class CLIStorage {
     // eslint-disable-next-line prefer-destructuring
     this.args.dir = program.args[0];
     this.args.template = options.template;
-  }
-
-  /**
-   * @memberof CLIStorage
-   * @description Логгирование переданных аргументов.
-   * @returns {void}
-   */
-  public logArgs() {
-    console.log(chalk.green('Переданные аргументы:'));
-    console.table(this.args);
-    console.log('');
-  }
-
-  /**
-   * @memberof CLIStorage
-   * @description Получение всех переданных аргументов.
-   * @returns {CLIArguments}
-   */
-  public getArgs() {
-    return this.args;
   }
 
 }
