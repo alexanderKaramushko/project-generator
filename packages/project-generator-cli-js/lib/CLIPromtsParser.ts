@@ -3,6 +3,7 @@ import prompts from 'prompts';
 import { CLIAbstractParser } from './CLIAbstractParser';
 
 /**
+ * @augments CLIAbstractParser
  * @namespace CLIPromptsParser
  * @description Класс считывания аргументов CLI из промпт-ов.
  */

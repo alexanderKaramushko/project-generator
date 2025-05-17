@@ -7,6 +7,7 @@ import packageJson from '../../../package.json';
 import { CLIAbstractParser } from './CLIAbstractParser';
 
 /**
+ * @augments CLIAbstractParser
  * @namespace CLIInputParser
  * @description Класс считывания аргументов CLI as is.
  */

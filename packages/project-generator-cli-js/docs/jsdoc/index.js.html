@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/alexanderKaramushko/project-generator/tree/main/packages/project-generator-cli-js" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Namespaces</h3><ul><li><a href="CLIStorage.html">CLIStorage</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CLIStorage.html#getArgs">getArgs</a></li><li data-type='method' style='display: none;'><a href="CLIStorage.html#logArgs">logArgs</a></li></ul></li><li><a href="Core.html">Core</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Core.html#createApp">createApp</a></li></ul></li><li><a href="TemplateValidator.html">TemplateValidator</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TemplateValidator.html#validate">validate</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#CLIArguments">CLIArguments</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/alexanderKaramushko/project-generator/tree/main/packages/project-generator-cli-js" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Namespaces</h3><ul><li><a href="global.html#CLIAbstractParser">CLIAbstractParser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="global.html#CLIAbstractParser#getArgs">getArgs</a></li><li data-type='method' style='display: none;'><a href="global.html#CLIAbstractParser#logArgs">logArgs</a></li></ul></li><li><a href="CLIInputParser.html">CLIInputParser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CLIInputParser.html#parseInput">parseInput</a></li></ul></li><li><a href="CLIPromptsParser.html">CLIPromptsParser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CLIPromptsParser.html#parseInput">parseInput</a></li></ul></li><li><a href="Core.html">Core</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Core.html#createApp">createApp</a></li></ul></li><li><a href="TemplateValidator.html">TemplateValidator</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TemplateValidator.html#validate">validate</a></li></ul></li></ul><h3><a href="global.html">Global</a></h3>
     
 </nav>
 
@@ -97,6 +97,8 @@ define("package", [], {
         "publish:pg-template-structure:major": "sh ./bump major pg-template-structure",
         "publish:pg-template-builder:minor": "sh ./bump minor pg-template-builder",
         "publish:pg-template-builder:major": "sh ./bump major pg-template-builder",
+        "publish:pg-template-esbuild:minor": "sh ./bump minor pg-template-esbuild",
+        "publish:pg-template-esbuild:major": "sh ./bump major pg-template-esbuild",
         "postinstall": "chmod +x ./bump"
     },
     "devDependencies": {
@@ -124,28 +126,71 @@ define("package", [], {
         "lib": "./lib"
     }
 });
-define("packages/project-generator-cli-js/lib/CLIStorage", ["require", "exports", "chalk", "commander", "envinfo", "package"], function (require, exports, chalk_1, commander_1, envinfo_1, package_json_1) {
+define("packages/project-generator-cli-js/lib/CLIAbstractParser", ["require", "exports", "chalk"], function (require, exports, chalk_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.CLIStorage = void 0;
+    exports.CLIAbstractParser = void 0;
     chalk_1 = __importDefault(chalk_1);
-    envinfo_1 = __importDefault(envinfo_1);
-    package_json_1 = __importDefault(package_json_1);
     /**
-     * @namespace CLIStorage
-     * @description Класс считывания аргументов CLI.
+     * @class
+     * @namespace CLIAbstractParser
+     * @description Абстрактный класс парсинга коммандной строки.
      */
-    class CLIStorage {
+    class CLIAbstractParser {
         /**
-         * @typedef {Object} CLIArguments
+         * @typedef {Object} CLIAbstractParser
          * @property {string} dir Директория, в которой будет создано приложение.
+         * @property {string} builder Билдер, который будет собирать проект.
          * @property {object} template Выбор шаблона проекта.
          */
         args = {
+            builder: 'esbuild',
             dir: '',
             template: 'react-typescript',
         };
-        constructor() {
+        // eslint-disable-next-line class-methods-use-this
+        async parseInput() {
+            throw new Error('Метод не имплементирован.');
+        }
+        /**
+         * @memberof CLIAbstractParser
+         * @description Логгирование переданных аргументов.
+         * @returns {void}
+         */
+        logArgs() {
+            console.log(chalk_1.default.green('Переданные аргументы:'));
+            console.table(this.args);
+            console.log('');
+        }
+        /**
+         * @memberof CLIAbstractParser
+         * @description Получение всех переданных аргументов.
+         * @returns {CLIArguments}
+         */
+        getArgs() {
+            return this.args;
+        }
+    }
+    exports.CLIAbstractParser = CLIAbstractParser;
+});
+define("packages/project-generator-cli-js/lib/CLIInputParser", ["require", "exports", "chalk", "commander", "envinfo", "package", "packages/project-generator-cli-js/lib/CLIAbstractParser"], function (require, exports, chalk_2, commander_1, envinfo_1, package_json_1, CLIAbstractParser_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CLIInputParser = void 0;
+    chalk_2 = __importDefault(chalk_2);
+    envinfo_1 = __importDefault(envinfo_1);
+    package_json_1 = __importDefault(package_json_1);
+    /**
+     * @augments CLIAbstractParser
+     * @namespace CLIInputParser
+     * @description Класс считывания аргументов CLI as is.
+     */
+    class CLIInputParser extends CLIAbstractParser_1.CLIAbstractParser {
+        /**
+         * @memberof CLIInputParser
+         * @description Парсит аргументы введеные вручную в коммандную строку.
+         */
+        async parseInput() {
             commander_1.program
                 .name('project-generator')
                 .description('Генератор шаблонов')
@@ -158,15 +203,15 @@ define("packages/project-generator-cli-js/lib/CLIStorage", ["require", "exports"
                 .option('--info', 'Показать информацию о хост-окружении')
                 .on('--help', () => {
                 console.log();
-                console.log(`Версия приложения: ${chalk_1.default.bgYellow(package_json_1.default.version)}`);
-                console.log(`Только ${chalk_1.default.green('&lt;project-directory>')} является обязательной опцией.`);
-                console.log(`Шаблон приложения опубликован на npm: ${chalk_1.default.blue('https://www.npmjs.com/package/pg-template')}`);
+                console.log(`Версия приложения: ${chalk_2.default.bgYellow(package_json_1.default.version)}`);
+                console.log(`Только ${chalk_2.default.green('&lt;project-directory>')} является обязательной опцией.`);
+                console.log(`Шаблон приложения опубликован на npm: ${chalk_2.default.blue('https://www.npmjs.com/package/pg-template')}`);
                 console.log();
             });
             commander_1.program.parse();
             const options = commander_1.program.opts();
             if (options.info) {
-                console.log(chalk_1.default.bold('\nИнформация об окружении:'));
+                console.log(chalk_2.default.bold('\nИнформация об окружении:'));
                 console.log(`\n  текущая версия ${package_json_1.default.name}: ${package_json_1.default.version}`);
                 console.log(`Запущен из ${__dirname}`);
                 envinfo_1.default
@@ -193,26 +238,77 @@ define("packages/project-generator-cli-js/lib/CLIStorage", ["require", "exports"
             this.args.dir = commander_1.program.args[0];
             this.args.template = options.template;
         }
+    }
+    exports.CLIInputParser = CLIInputParser;
+});
+define("packages/project-generator-cli-js/lib/CLIPromtsParser", ["require", "exports", "prompts", "packages/project-generator-cli-js/lib/CLIAbstractParser"], function (require, exports, prompts_1, CLIAbstractParser_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CLIPromptsParser = void 0;
+    prompts_1 = __importDefault(prompts_1);
+    /**
+     * @namespace CLIPromptsParser
+     * @description Класс считывания аргументов CLI из промпт-ов.
+     */
+    class CLIPromptsParser extends CLIAbstractParser_2.CLIAbstractParser {
         /**
-         * @memberof CLIStorage
-         * @description Логгирование переданных аргументов.
-         * @returns {void}
+         * @augments CLIAbstractParser
+         * @memberof CLIPromptsParser
+         * @description Парсит аргументы на основе выбранных промпт-ов.
          */
-        logArgs() {
-            console.log(chalk_1.default.green('Переданные аргументы:'));
-            console.table(this.args);
-            console.log('');
-        }
-        /**
-         * @memberof CLIStorage
-         * @description Получение всех переданных аргументов.
-         * @returns {CLIArguments}
-         */
-        getArgs() {
-            return this.args;
+        async parseInput() {
+            const response = await (0, prompts_1.default)([
+                {
+                    choices: [
+                        {
+                            title: 'React',
+                            value: 'react',
+                        },
+                        {
+                            title: 'React с TS',
+                            value: 'react-typescript',
+                        },
+                        {
+                            title: 'Plain JS',
+                            value: 'plain-js',
+                        },
+                    ],
+                    message: 'Выберите шаблон',
+                    name: 'template',
+                    type: 'select',
+                },
+                {
+                    choices: [
+                        {
+                            title: 'ESBuild',
+                            value: 'esbuild',
+                        },
+                        {
+                            title: 'Parcel',
+                            value: 'parcel',
+                        },
+                        {
+                            title: 'Rollup',
+                            value: 'rollup',
+                        },
+                    ],
+                    message: 'Выберите билдер',
+                    name: 'builder',
+                    type: 'select',
+                },
+                {
+                    initial: './',
+                    message: 'Укажите директорию проекта',
+                    name: 'dir',
+                    type: 'text',
+                },
+            ]);
+            this.args.template = response.template;
+            this.args.builder = response.builder;
+            this.args.dir = response.dir;
         }
     }
-    exports.CLIStorage = CLIStorage;
+    exports.CLIPromptsParser = CLIPromptsParser;
 });
 define("packages/project-generator-cli-js/lib/template-validator/schemas/eslint", [], {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -2579,26 +2675,29 @@ define("packages/project-generator-cli-js/lib/template-validator/schemas/templat
     "description": "Валидация полей для генерации проекта",
     "type": "object",
     "properties": {
-        "package": {
-            "description": "package.json",
-            "$ref": "https://json.schemastore.org/package.json"
+        "projects": {
+            "description": "package.json-ы проекта (название может включать путь)",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "https://json.schemastore.org/package.json"
+            }
         },
         "configs": {
+            "description": "Конфиги проекта (название может включать путь)",
             "type": "object",
-            "properties": {
-                "eslint.config.mjs": {
+            "oneOf": [
+                {
                     "description": "Конфиг eslint",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
-                "tsconfig.json": {
+                {
                     "description": "Конфиг typescript",
                     "$ref": "https://json.schemastore.org/tsconfig"
                 }
-            },
-            "required": ["eslint.config.mjs", "tsconfig.json"]
+            ]
         },
         "fileStructure": {
             "description": "Название библиотеки, из которой берется структура проекта",
@@ -2610,7 +2709,7 @@ define("packages/project-generator-cli-js/lib/template-validator/schemas/templat
             "pattern": "esbuild|vite"
         }
     },
-    "required": ["package", "configs"]
+    "required": ["projects", "configs"]
 });
 define("packages/project-generator-cli-js/lib/template-validator/schemas/typescript", [], {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -4092,13 +4191,13 @@ define("packages/project-generator-cli-js/lib/template-validator/schemas/index",
     Object.defineProperty(exports, "templateSchema", { enumerable: true, get: function () { return __importDefault(template_json_1).default; } });
     Object.defineProperty(exports, "typescriptSchema", { enumerable: true, get: function () { return __importDefault(typescript_json_1).default; } });
 });
-define("packages/project-generator-cli-js/lib/template-validator/TemplateValidator", ["require", "exports", "ajv", "ajv-formats", "chalk", "packages/project-generator-cli-js/lib/template-validator/schemas/index"], function (require, exports, ajv_1, ajv_formats_1, chalk_2, schemas_1) {
+define("packages/project-generator-cli-js/lib/template-validator/TemplateValidator", ["require", "exports", "ajv", "ajv-formats", "chalk", "packages/project-generator-cli-js/lib/template-validator/schemas/index"], function (require, exports, ajv_1, ajv_formats_1, chalk_3, schemas_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TemplateValidator = void 0;
     ajv_1 = __importDefault(ajv_1);
     ajv_formats_1 = __importDefault(ajv_formats_1);
-    chalk_2 = __importDefault(chalk_2);
+    chalk_3 = __importDefault(chalk_3);
     /**
      * @namespace TemplateValidator
      * @description Класс валидации JSON-схем.
@@ -4124,7 +4223,7 @@ define("packages/project-generator-cli-js/lib/template-validator/TemplateValidat
             (0, ajv_formats_1.default)(ajv);
             const valid = ajv.validate(schemas_1.templateSchema, this.template);
             if (!valid) {
-                console.log(chalk_2.default.red('Схема template.json не валидная!'));
+                console.log(chalk_3.default.red('Схема template.json не валидная!'));
                 console.table(ajv.errors?.reduce((errors, error) => {
                     if (!error.instancePath) {
                         return errors;
@@ -4152,11 +4251,11 @@ define("packages/project-generator-cli-js/lib/utils/createRWFile", ["require", "
     /**
      * Создает файл с заданным именем для чтения и записи.
      *
-     * @param {string} name - Имя файла c расширением, который нужно создать.
+     * @param {string} src - Путь до файла c расширением, который нужно создать.
      * @param {string | string[]} content - Контент файла.
      */
-    function createRWFile(name, content) {
-        if ((0, node_fs_1.existsSync)(name)) {
+    function createRWFile(src, content) {
+        if ((0, node_fs_1.existsSync)(src)) {
             return;
         }
         // eslint-disable-next-line no-underscore-dangle
@@ -4167,9 +4266,9 @@ define("packages/project-generator-cli-js/lib/utils/createRWFile", ["require", "
         else {
             _content = JSON.stringify(content);
         }
-        (0, child_process_1.execSync)(`touch ${name}`);
-        (0, child_process_1.execSync)(`chmod uo+rw ${name}`);
-        (0, node_fs_1.appendFileSync)(name, _content, 'utf-8');
+        (0, child_process_1.execSync)(`touch ${src}`);
+        (0, child_process_1.execSync)(`chmod uo+rw ${src}`);
+        (0, node_fs_1.appendFileSync)(src, _content, 'utf-8');
     }
 });
 define("packages/project-generator-cli-js/lib/utils/mergeJSONFile", ["require", "exports", "lodash.merge", "node:fs"], function (require, exports, lodash_merge_1, node_fs_2) {
@@ -4198,13 +4297,14 @@ define("packages/project-generator-cli-js/lib/utils/index", ["require", "exports
     __exportStar(createRWFile_1, exports);
     __exportStar(mergeJSONFile_1, exports);
 });
-define("packages/project-generator-cli-js/lib/Core", ["require", "exports", "chalk", "child_process", "dns", "node:fs", "node:path", "packages/project-generator-cli-js/lib/template-validator/index", "packages/project-generator-cli-js/lib/utils/index"], function (require, exports, chalk_3, child_process_2, dns_1, node_fs_3, node_path_1, template_validator_1, utils_1) {
+define("packages/project-generator-cli-js/lib/Core", ["require", "exports", "chalk", "child_process", "dns", "node:fs", "node:path", "yocto-spinner", "packages/project-generator-cli-js/lib/template-validator/index", "packages/project-generator-cli-js/lib/utils/index"], function (require, exports, chalk_4, child_process_2, dns_1, node_fs_3, node_path_1, yocto_spinner_1, template_validator_1, utils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Core = void 0;
-    chalk_3 = __importDefault(chalk_3);
+    chalk_4 = __importDefault(chalk_4);
     dns_1 = __importDefault(dns_1);
     node_path_1 = __importDefault(node_path_1);
+    yocto_spinner_1 = __importDefault(yocto_spinner_1);
     function checkIfOnline() {
         return new Promise((resolve) => {
             dns_1.default.lookup('registry.yarnpkg.com', (error) => {
@@ -4215,6 +4315,12 @@ define("packages/project-generator-cli-js/lib/Core", ["require", "exports", "cha
     /**
      * @namespace Core
      * @description Класс генерации проекта из пресетов.
+     *
+     * @todo Перевести пакеты на type: module
+     * @todo Удалить лишние артефакты из сборки пресета
+     * @todo Добавить файлы логов в пакеты
+     * @todo Добавить логи сборки
+     * @todo Проверить сборку на прод
      */
     class Core {
         CLI;
@@ -4233,87 +4339,84 @@ define("packages/project-generator-cli-js/lib/Core", ["require", "exports", "cha
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
         async createApp() {
             const { dir, template } = this.CLI.getArgs();
+            const spinner = (0, yocto_spinner_1.default)().start();
             if (!(0, node_fs_3.existsSync)(dir)) {
-                console.log(chalk_3.default.blue(`Указанной директории ${dir} нет, создаем`));
+                spinner.text = chalk_4.default.blue(`Указанной директории ${dir} нет, создаем...`);
                 (0, node_fs_3.mkdirSync)(dir, { recursive: true });
             }
             if (await checkIfOnline()) {
-                console.log(chalk_3.default.green('Вы в сети'));
+                console.log(chalk_4.default.green('Вы в сети'));
             }
             else {
-                console.log(chalk_3.default.red('Похоже, что вы отключены от сети'));
+                console.log(chalk_4.default.red('Похоже, что вы отключены от сети'));
                 process.exit(1);
             }
-            console.log(chalk_3.default.blue(`Переходим в директорию ${dir}`));
-            console.log(chalk_3.default.blue('Скачивание стартового шаблона'));
-            (0, child_process_2.execSync)(`npm pack pg-template-starter --pack-destination ${dir}`);
-            const normalizedDir = dir.endsWith('/') ? dir : `${dir}/`;
-            console.log(chalk_3.default.blue('Распаковка шаблона'));
-            (0, child_process_2.execSync)(`tar -xvf ${normalizedDir}pg-template-starter-*.tgz -C ${dir} &amp;&amp; rm ${normalizedDir}pg-template-starter-*.tgz`);
+            spinner.text = chalk_4.default.blue('Скачивание стартового шаблона...');
+            (0, child_process_2.execSync)('npm pack pg-template-starter -s');
+            spinner.text = chalk_4.default.blue('Распаковка шаблона...');
+            (0, child_process_2.execSync)(`tar -xf pg-template-starter-*.tgz -C ${dir} &amp;&amp; rm pg-template-starter-*.tgz`);
             const packageDir = node_path_1.default.resolve(dir, 'package');
-            const starterPackageJSON = (0, node_fs_3.readFileSync)(node_path_1.default.resolve(packageDir, 'package.json'), { encoding: 'utf-8' });
             const starterTemplateJSON = (0, node_fs_3.readFileSync)(node_path_1.default.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
             const starterTemplateData = JSON.parse(starterTemplateJSON);
-            const starterPackageJSONData = JSON.parse(starterPackageJSON);
             if (!Reflect.has(starterTemplateData, template)) {
-                console.log(chalk_3.default.red('Не найден шаблон! Похоже, передан неверный template'));
+                console.log(chalk_4.default.red('Не найден шаблон! Похоже, передан неверный template'));
                 (0, child_process_2.execSync)(`rm -r ${dir}`);
+                spinner.stop();
                 return;
             }
             const pickedTemplate = starterTemplateData[template];
-            const { devDependencies, ...projectFields } = pickedTemplate.package;
             const templateValidator = new template_validator_1.TemplateValidator(pickedTemplate);
             const valid = templateValidator.validate();
             if (!valid) {
                 return;
             }
+            spinner.text = chalk_4.default.blue('Создание конфигов...');
             Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
                 if (content) {
                     (0, utils_1.createRWFile)(node_path_1.default.resolve(packageDir, config), content);
                 }
             });
-            console.log(chalk_3.default.blue('Скачивание стартовой файловой структуры'));
-            (0, child_process_2.execSync)(`npm pack ${pickedTemplate.fileStructure} --pack-destination ${dir}`);
-            console.log(chalk_3.default.blue('Распаковка файловой структуры'));
-            (0, child_process_2.execSync)(`tar -xvf ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz -C ${dir} &amp;&amp; rm ${normalizedDir}${pickedTemplate.fileStructure}-*.tgz`);
+            spinner.text = chalk_4.default.blue('Скачивание стартовой файловой структуры');
+            (0, child_process_2.execSync)(`npm pack ${pickedTemplate.fileStructure} -s`);
+            spinner.text = chalk_4.default.blue('Распаковка файловой структуры');
+            (0, child_process_2.execSync)(`tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} &amp;&amp; rm ${pickedTemplate.fileStructure}-*.tgz`);
             const projectDir = node_path_1.default.resolve(packageDir, 'project');
             const filesPresets = node_path_1.default.resolve(packageDir, 'presets');
             const fileStructureDir = node_path_1.default.resolve(filesPresets, template);
             const structureList = (0, node_fs_3.readdirSync)(fileStructureDir);
+            spinner.text = chalk_4.default.blue('Создание структуры пресета...');
             structureList.forEach((name) => {
                 (0, child_process_2.execSync)(`mv -n ${node_path_1.default.resolve(filesPresets, template, name)} ${projectDir}`);
             });
             (0, child_process_2.execSync)(`rm -rf ${filesPresets}`);
-            (0, utils_1.mergeJSONFile)(node_path_1.default.resolve(projectDir, 'package.json'), {
-                ...projectFields,
-                devDependencies: {
-                    'pg-template-builder': 'latest',
-                },
+            spinner.text = chalk_4.default.blue('Создание пакетов...');
+            Object.entries(pickedTemplate.projects).forEach(([project, content]) => {
+                if (content) {
+                    (0, utils_1.mergeJSONFile)(node_path_1.default.resolve(packageDir, project), content);
+                }
             });
-            (0, utils_1.mergeJSONFile)(node_path_1.default.resolve(packageDir, 'package.json'), { devDependencies,
-                scripts: {
-                    ...starterPackageJSONData.scripts,
-                } });
-            console.log(chalk_3.default.blue('Установка зависимостей'));
+            spinner.text = chalk_4.default.blue('Установка зависимостей...');
             // Решение проблемы со установкой пакетов шаблона
             (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; npm install`);
+            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; npm install --legacy-peer-deps -s`);
             // Решение проблемы со установкой пакетов шаблона
             (0, child_process_2.execSync)(`cd ${projectDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-            (0, child_process_2.execSync)(`cd ${projectDir} &amp;&amp; npm install`);
-            console.log(chalk_3.default.blue('Подготовка проекта'));
+            (0, child_process_2.execSync)(`cd ${projectDir} &amp;&amp; npm install --legacy-peer-deps -s`);
+            spinner.text = chalk_4.default.blue('Подготовка проекта...');
             (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; yarn lint:fix`);
             (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; git init &amp;&amp; git add . &amp;&amp; git commit -m 'initial commit'`);
+            spinner.stop(chalk_4.default.green('Готово •͡˘㇁•͡˘'));
         }
     }
     exports.Core = Core;
 });
-define("packages/project-generator-cli-js/lib/index", ["require", "exports", "dotenv", "packages/project-generator-cli-js/lib/CLIStorage", "packages/project-generator-cli-js/lib/Core"], function (require, exports, dotenv_1, CLIStorage_1, Core_1) {
+define("packages/project-generator-cli-js/lib/index", ["require", "exports", "dotenv", "packages/project-generator-cli-js/lib/CLIInputParser", "packages/project-generator-cli-js/lib/CLIPromtsParser", "packages/project-generator-cli-js/lib/Core"], function (require, exports, dotenv_1, CLIInputParser_1, CLIPromtsParser_1, Core_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     dotenv_1 = __importDefault(dotenv_1);
     dotenv_1.default.config();
-    __exportStar(CLIStorage_1, exports);
+    __exportStar(CLIInputParser_1, exports);
+    __exportStar(CLIPromtsParser_1, exports);
     __exportStar(Core_1, exports);
 });
 </code></pre>
@@ -4330,7 +4433,7 @@ define("packages/project-generator-cli-js/lib/index", ["require", "exports", "do
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Jan 26 2025 17:15:13 GMT+0400 (Samara Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sat May 17 2025 20:27:02 GMT+0400 (Samara Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

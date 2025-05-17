@@ -27,6 +27,7 @@ export interface CLIParser {
 }
 
 /**
+ * @class
  * @namespace CLIAbstractParser
  * @description Абстрактный класс парсинга коммандной строки.
  */
