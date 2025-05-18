@@ -54,7 +54,7 @@ export class CLIPromptsParser extends CLIAbstractParser {
         type: 'select',
       },
       {
-        initial: './',
+        initial: process.cwd(),
         message: 'Укажите директорию проекта',
         name: 'dir',
         type: 'text',
