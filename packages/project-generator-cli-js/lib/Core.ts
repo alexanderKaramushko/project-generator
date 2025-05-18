@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import dns from 'dns';
-import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import fs, { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { Template } from 'pg-template-starter';
 import yoctoSpinner from 'yocto-spinner';
@@ -10,6 +10,8 @@ import yoctoSpinner from 'yocto-spinner';
 import { CLIAbstractParser } from './CLIAbstractParser';
 import { TemplateValidator } from './template-validator';
 import { createRWFile, mergeJSONFile } from './utils';
+
+const artifactsNames = ['template.json', 'template.ts'];
 
 function checkIfOnline() {
   return new Promise((resolve) => {
@@ -24,7 +26,6 @@ function checkIfOnline() {
  * @description Класс генерации проекта из пресетов.
  *
  * @todo Перевести пакеты на type: module
- * @todo Удалить лишние артефакты из сборки пресета
  * @todo Добавить файлы логов в пакеты
  * @todo Добавить логи сборки
  * @todo Проверить сборку на прод
@@ -130,8 +131,12 @@ export class Core {
 
     spinner.text = chalk.blue('Подготовка проекта...');
 
+    artifactsNames.forEach((artifactName) => (
+      fs.rmSync(path.resolve(packageDir, artifactName))
+    ));
+
     execSync(`cd ${packageDir} && yarn lint:fix`);
-    execSync(`cd ${packageDir} && git init && git add . && git commit -m 'initial commit'`);
+    execSync(`cd ${packageDir} && git init && git add . && git commit  -m 'initial commit'`);
 
     spinner.stop(chalk.green('Готово •͡˘㇁•͡˘'));
   }
