@@ -29,6 +29,10 @@ function checkIfOnline() {
  * @todo Добавить codegen в зависимости от прописанного templateName в package.json после генерации проекта
  * @todo Перевести пакеты на type: module
  * @todo Добавить файл логов pg-generator-debug.log
+ *
+ * External
+ * @todo Исследовать возможность парсинга и переноса todo в issues через github api.
+ * Для этого надо будет настроить минимальный пайплайн со сборкой jsdoc -> json -> github api
  */
 export class Core {
 
