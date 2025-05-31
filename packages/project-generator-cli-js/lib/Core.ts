@@ -25,7 +25,6 @@ function checkIfOnline() {
  * @namespace Core
  * @description Класс генерации проекта из пресетов.
  *
- * @todo Вынести каждый шаблон в отдельный пакет, чтобы снизить кол-во загружаемых файлов
  * @todo Добавить codegen в зависимости от прописанного templateName в package.json после генерации проекта
  * @todo Перевести пакеты на type: module
  * @todo Добавить файл логов pg-generator-debug.log
