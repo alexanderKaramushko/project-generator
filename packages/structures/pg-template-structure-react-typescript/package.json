@@ -1,0 +1,22 @@
+{
+  "name": "pg-template-structure-react-typescript",
+  "version": "1.1.0",
+  "keywords": [
+    "starter-structure-react-typescript",
+    "project-generator",
+    "files",
+    "template",
+    "structure"
+  ],
+  "main": "./presets",
+  "description": "Стартовые внутренние файловые структуры проектов по пресетам",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator.git",
+    "directory": "packages/structures/pg-template-structure-react-typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}
