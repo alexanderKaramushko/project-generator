@@ -33,7 +33,8 @@
     "publish:pg-template-builder:major": "sh ./bump major pg-template-builder",
     "publish:pg-template-esbuild:minor": "sh ./bump minor pg-template-esbuild",
     "publish:pg-template-esbuild:major": "sh ./bump major pg-template-esbuild",
-    "postinstall": "chmod +x ./bump"
+    "publish:pg-template-structures": "sh ./publish-templates",
+    "postinstall": "chmod +x ./bump & chmod +x ./publish-templates"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
