@@ -357,7 +357,7 @@
         ""
       ]
     },
-    "fileStructure": "pg-template-structure",
+    "fileStructure": "pg-template-structure-react-typescript",
     "builder": "esbuild"
   }
 }
