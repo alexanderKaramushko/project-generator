@@ -17,4 +17,5 @@ export type RouteHandle = {
 export type ExtendedRouteObject = RouteObject & {
   meta?: RouteMeta;
   children?: ExtendedRouteObject[];
+  permissions: string[];
 };
