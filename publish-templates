@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+for package in ./packages/structures/pg-template-structure-*
+do
+if [ -d "$package" ]; then
+  if [ -z "$(git status --porcelain "$package")" ]; then
+    echo "Шаблон не изменялся, пропускаем публикацию"
+  else
+    cd $package
+    npm version minor
+
+    cd ../../../
+
+    git add "$package/*"
+    git add "./package-lock.json"
+    git commit -m "обновление пакета со структурой шаблона: $package"
+
+    cd $package
+    npm publish
+
+    cd ../../../
+
+    [ $? -eq 1 ] && git reset --soft HEAD~1
+  fi
+fi
+done
