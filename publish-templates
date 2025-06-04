@@ -4,7 +4,7 @@ for package in ./packages/structures/pg-template-structure-*
 do
 if [ -d "$package" ]; then
   if [ -z "$(git status --porcelain "$package")" ]; then
-    echo "Шаблон не изменялся, пропускаем публикацию"
+    echo "Шаблон $package не изменялся, пропускаем публикацию"
   else
     cd $package
     npm version minor
