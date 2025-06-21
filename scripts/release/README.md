@@ -29,9 +29,3 @@
 | build       | запуск тестов, сборка артифактов  |
 | prerelease  | публикация canary-версии на основе переданного commit sha  |
 | release     | публикация release-версии на основе последней canary-версии  |
-
-Новый релиз пакета также приводит к поднятию версий у тех пакетов, которые зависимы от
-текущего пакета (dependencies и peerDependencies), если изменения не обратно совместивые.
-
-Например, обновился pg-template-starter@1.0.0 до 2.0.0, но project-generator-cli-js@1.0.0 зависит от pg-template-starter.
-Следовательно версия project-generator-cli-js поднимается до 2.0.0.
