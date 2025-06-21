@@ -32,6 +32,15 @@ function checkIfOnline() {
  * External
  * @todo Исследовать возможность парсинга и переноса todo в issues через github api.
  * Для этого надо будет настроить минимальный пайплайн со сборкой jsdoc -> json -> github api
+ *
+ * @todo Конфиг должен быть легко настраиваемым, то есть реализовываться весь шаблон должен через json
+ * Должно быть два конфига: внешний (инфраструктурный, eslint, jest и т.д) и внутренний (проект с dev-зависимостями).
+ * Внутренний конфиг подключает внешний через определеное поле в пакете.
+ * Шаги:
+ * – fileStructure нужно убрать из pg-template-starter.
+ * – Сам pg-template-starter переименовать в pg-template-configs.
+ * – После загрузки шаблона из structures прочитать поле externalConfigName
+ * – Скачать внешний конфиг по externalConfigName
  */
 export class Core {
 
