@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for package in ./packages/structures/pg-template-structure-*
+for package in ./packages/pg-template-structure-*
 do
 if [ -d "$package" ]; then
   if [ -z "$(git status --porcelain "$package")" ]; then
