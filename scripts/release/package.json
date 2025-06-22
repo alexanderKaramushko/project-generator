@@ -1,0 +1,29 @@
+{
+  "name": "release-scripts",
+  "version": "1.0.0",
+  "description": "Скрипты для релизов пакетов",
+  "private": true,
+  "keywords": [
+    "prerelease",
+    "release",
+    "changelog",
+    "tags"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Alexander Karamushko",
+    "email": "alex.karamushko@nordclan.com",
+    "url": "https://t.me/melkor_b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator",
+    "directory": "scripts/release"
+  },
+  "scripts": {
+    "prerelease": "npm run build && clean-package"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  }
+}
