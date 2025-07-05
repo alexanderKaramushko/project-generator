@@ -28,6 +28,8 @@ function syncVersion({ packageDir, packageName, tag }) {
   if (!foundTag) {
     // eslint-disable-next-line no-console
     console.log(`Не удалось синхронизировать версию ${packageName} под тегом ${tag}`);
+    // eslint-disable-next-line no-console
+    console.log(`Возможно, ${tag} еще не был опубликован`);
     return;
   }
 

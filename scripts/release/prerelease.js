@@ -46,30 +46,36 @@ async function run() {
     tag: 'canary',
   });
 
-  packageDirContext.cmd('npm', 'version', 'prerelease', '--no-git-tag-version');
+  const versionUpdate = packageDirContext.cmd('npm', 'version', 'prerelease', '--no-git-tag-version').stdout;
+  const newVersion = versionUpdate.match(/\d+.\d.\d+(?:-\d+)?/, /$1/)[0];
 
-  // eslint-disable-next-line import/no-dynamic-require, global-require
-  const packageJSON = require(path.join(response.package.packageDir, 'package.json'));
   const packageVersions = shelljs.cmd('npm', 'view', response.package.packageName, 'versions').stdout;
 
-  if (!packageVersions.includes(packageJSON.version)) {
-    const { code: exitCode } = shelljs.cmd('npm', 'publish', '--tag', 'canary');
+  if (newVersion && !packageVersions.includes(newVersion)) {
+    const { code: exitCode, stderr } = shelljs.cmd('npm', 'publish', '--tag', 'canary');
+
+    shelljs.cmd('git', 'reset', '*');
+    shelljs.cmd('git', 'add', path.join(response.package.packageDir, 'package.json'));
+    shelljs.cmd('git', 'add', path.join(process.cwd(), 'package-lock.json'));
+    shelljs.cmd('git', 'commit', '-m', `canary-релиз версии ${newVersion} пакета ${response.package.packageName}`);
+    shelljs.cmd('git', 'push');
 
     if (exitCode === 0) {
-      shelljs.cmd('git', 'reset', '*');
-      shelljs.cmd('git', 'add', path.join(response.package.packageDir, 'package.json'));
-      shelljs.cmd('git', 'add', path.join(process.cwd(), 'package-lock.json'));
-      shelljs.cmd('git', 'commit', `canary-релиз версии ${packageJSON.version} пакета ${response.package.packageName}`);
-      shelljs.cmd('git', 'push');
+      // eslint-disable-next-line no-console
+      console.log(`Пакет ${response.package.packageName} с версией ${newVersion} опубликован`);
     } else {
       // eslint-disable-next-line no-console
-      console.log(`Пакет ${response.package.packageName} не удалось опубликовать, попробуйте еще раз`);
+      console.log(`Пакет ${response.package.packageName} с версией ${newVersion} не удалось опубликовать, попробуйте еще раз`);
+      // eslint-disable-next-line no-console
+      console.log('Логи публикации:');
+      // eslint-disable-next-line no-console
+      console.log(stderr);
+      shelljs.cmd('git', 'reset', '--hard', 'HEAD~1');
     }
   } else {
-    shelljs.cmd('git', 'reset', packageJSON);
     shelljs.cmd('git', 'reset', path.join(response.package.packageDir, 'package.json'));
     // eslint-disable-next-line no-console
-    console.log(`Пакет ${response.package.packageName} с версией ${packageJSON} уже опубликован!`);
+    console.log(`Пакет ${response.package.packageName} с версией ${newVersion} уже опубликован!`);
   }
 }
 
