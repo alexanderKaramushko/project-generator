@@ -10,7 +10,7 @@
 const shelljs = require('shelljs');
 const path = require('node:path');
 const syncVersion = require('./sync-version');
-const enlistPackages = require('./enlist-packages');
+const { enlistPackages } = require('./enlist');
 
 async function run() {
   const response = await enlistPackages();

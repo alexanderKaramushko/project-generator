@@ -18,7 +18,33 @@ function enlistPackages() {
       type: 'select',
     },
   ]);
-
 }
 
-module.exports = enlistPackages;
+function enlistVersions() {
+  return prompts([
+    {
+      choices: [
+        {
+          title: 'patch',
+          value: 'patch',
+        },
+        {
+          title: 'minor',
+          value: 'minor',
+        },
+        {
+          title: 'major',
+          value: 'major',
+        },
+      ],
+      message: 'Выберите версию',
+      name: 'version',
+      type: 'select',
+    },
+  ]);
+}
+
+module.exports = {
+  enlistPackages,
+  enlistVersions,
+};
