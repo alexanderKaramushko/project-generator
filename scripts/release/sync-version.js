@@ -16,20 +16,20 @@ const path = require('node:path');
  *
  * @returns {void}
  */
-function syncVersion({ packageDir, packageName, tag }) {
+function syncVersion({ packageDir, packageName, npmTag }) {
   // eslint-disable-next-line import/no-dynamic-require, global-require
   const packageJSON = require(path.join(packageDir, 'package.json'));
 
   const foundTag = shelljs.cmd('npm', 'dist-tags', 'ls', packageName).split('\n')
     .filter(Boolean)
     .map((distTag) => distTag.split(':'))
-    .find(([tagName]) => tagName === tag);
+    .find(([tagName]) => tagName === npmTag);
 
   if (!foundTag) {
     // eslint-disable-next-line no-console
-    console.log(`Не удалось синхронизировать версию ${packageName} под тегом ${tag}`);
+    console.log(`Не удалось синхронизировать версию ${packageName} под тегом ${npmTag}`);
     // eslint-disable-next-line no-console
-    console.log(`Возможно, ${tag} еще не был опубликован`);
+    console.log(`Возможно, ${npmTag} еще не был опубликован`);
     return;
   }
 

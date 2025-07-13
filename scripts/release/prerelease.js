@@ -18,11 +18,11 @@ async function run() {
   const packageDirContext = shelljs.cd(response.package.packageDir);
 
   packageDirContext.cmd('npm', 'run', 'test', '--if-present');
-  packageDirContext.cmd('npm', 'build', 'test', '--if-present');
+  packageDirContext.cmd('npm', 'run', 'build', '--if-present');
 
   syncVersion({
     ...response.package,
-    tag: 'canary',
+    npmTag: 'canary',
   });
 
   const versionUpdate = packageDirContext.cmd('npm', 'version', 'prerelease', '--no-git-tag-version').stdout;
