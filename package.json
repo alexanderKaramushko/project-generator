@@ -23,7 +23,8 @@
   "scripts": {
     "test": "vitest",
     "test:dev": "vitest watch",
-    "prerelease": "scripts/release/prerelease.js",
+    "canary-release": "scripts/release/prerelease.js",
+    "release": "scripts/release/release.js",
     "publish:pg-template-starter:minor": "sh ./bump minor pg-template-starter",
     "publish:pg-template-starter:major": "sh ./bump major pg-template-starter",
     "publish:project-generator-cli-js:minor": "sh ./bump minor project-generator-cli-js",
