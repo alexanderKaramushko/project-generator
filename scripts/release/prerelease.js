@@ -7,31 +7,10 @@
 // 5. Опубликовать пакет ✅
 // 6. Уведомить в боте и предрелизе ⏳
 
-const prompts = require('prompts');
 const shelljs = require('shelljs');
 const path = require('node:path');
-const getPackages = require('./get-packages');
 const syncVersion = require('./sync-version');
-
-function enlistPackages() {
-  const packages = getPackages();
-
-  return prompts([
-    {
-      choices: packages.map(({ packageDir, packageName }) => ({
-        title: packageName,
-        value: {
-          packageDir,
-          packageName,
-        },
-      })),
-      message: 'Выберите пакет для публикации',
-      name: 'package',
-      type: 'select',
-    },
-  ]);
-
-}
+const enlistPackages = require('./enlist-packages');
 
 async function run() {
   const response = await enlistPackages();
