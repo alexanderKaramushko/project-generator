@@ -1,6 +1,6 @@
 {
   "name": "project-generator-cli-js",
-  "version": "1.15.1-0",
+  "version": "1.15.1-1",
   "description": "CLI для генерации проекта из шаблонов",
   "keywords": [
     "typescript",
