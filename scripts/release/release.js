@@ -44,7 +44,7 @@ async function run() {
 
     syncVersion({
       ...response.package,
-      npmTag: 'latest',
+      npmTag: 'canary',
     });
 
     const versionUpdate = packageDirContext.cmd('npm', 'version', versionType.version, '--no-git-tag-version').stdout;

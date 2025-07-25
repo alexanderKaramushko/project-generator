@@ -38,7 +38,7 @@ async function run() {
       packageDir: response.package.packageDir,
       packageName: response.package.packageName,
       version: newVersion,
-      versionType: 'canary',
+      versionType: 'latest',
     });
 
     if (exitCode === 0) {
