@@ -13,6 +13,7 @@
 
 const path = require('node:path');
 const shelljs = require('shelljs');
+const semver = require('semver');
 const { enlistPackages, enlistVersions } = require('./enlist');
 const syncVersion = require('./sync-version');
 const commitRelease = require('./commit-release');
@@ -37,17 +38,6 @@ async function run() {
       .find(([tagName]) => tagName === 'canary');
 
     const canaryVersion = tags ? tags[1] : null;
-
-    // Здесь нужна semver-проверка на то, что
-    // текущая версия пакета больше канареечной ровно на одну версию,
-    // то есть предыдущая версия является канареечной
-    if (!/\d+.\d+.\d+-\d+/.test(canaryVersion)) {
-      console.log(`Версия ${canaryVersion} пакета ${response.package.packageName} не является предрелизной!`);
-      console.log('Создайте предрелизную версию через run run canary-release.');
-
-      return;
-    }
-
     const packageDirContext = shelljs.cd(response.package.packageDir);
 
     packageDirContext.cmd('npm', 'run', 'build', '--if-present');
@@ -60,8 +50,21 @@ async function run() {
     const versionUpdate = packageDirContext.cmd('npm', 'version', versionType.version, '--no-git-tag-version').stdout;
     const newVersion = versionUpdate.match(/\d+.\d+.\d+/, /$1/)[0];
 
+    if (!canaryVersion || !semver.eq(semver.inc(canaryVersion, versionType.version), newVersion)) {
+      if (canaryVersion) {
+        console.log(`Версия ${canaryVersion} пакета ${response.package.packageName} не является предрелизной!`);
+      } else {
+        console.log(`В пакете ${response.package.packageName} отсутствует предрелизная версия`);
+      }
+
+      console.log('Создайте предрелизную версию через run run canary-release.');
+
+      return;
+    }
+
     if (newVersion && !versions.some((version) => version === newVersion)) {
-      const { code: exitCode, stderr } = shelljs.cmd('npm', 'publish', '--tag', 'latest');
+      const { code: latestExitCode, stderr: latestStderr } = shelljs.cmd('npm', 'publish', '--tag', 'latest');
+      const { code: canaryExitCode, stderr: canaryStderr } = shelljs.cmd('npm', 'publish', '--tag', 'canary');
 
       commitRelease({
         packageDir: response.package.packageDir,
@@ -70,7 +73,7 @@ async function run() {
         versionType: versionType.version,
       });
 
-      if (exitCode === 0) {
+      if (latestExitCode === 0 && canaryExitCode === 0) {
         // eslint-disable-next-line no-console
         console.log(`Пакет ${response.package.packageName} с версией ${newVersion} опубликован`);
       } else {
@@ -79,7 +82,7 @@ async function run() {
         // eslint-disable-next-line no-console
         console.log('Логи публикации:');
         // eslint-disable-next-line no-console
-        console.log(stderr);
+        console.log(latestStderr || canaryStderr);
         shelljs.cmd('git', 'reset', '--hard', 'HEAD~1');
       }
     } else {
