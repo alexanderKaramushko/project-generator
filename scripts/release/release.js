@@ -63,8 +63,7 @@ async function run() {
     }
 
     if (newVersion && !versions.some((version) => version === newVersion)) {
-      const { code: latestExitCode, stderr: latestStderr } = shelljs.cmd('npm', 'publish', '--tag', 'latest');
-      const { code: canaryExitCode, stderr: canaryStderr } = shelljs.cmd('npm', 'publish', '--tag', 'canary');
+      const { code: exitCode, stderr } = shelljs.cmd('npm', 'publish', '--tag', 'latest');
 
       commitRelease({
         packageDir: response.package.packageDir,
@@ -73,7 +72,7 @@ async function run() {
         versionType: versionType.version,
       });
 
-      if (latestExitCode === 0 && canaryExitCode === 0) {
+      if (exitCode === 0) {
         // eslint-disable-next-line no-console
         console.log(`Пакет ${response.package.packageName} с версией ${newVersion} опубликован`);
       } else {
@@ -82,7 +81,7 @@ async function run() {
         // eslint-disable-next-line no-console
         console.log('Логи публикации:');
         // eslint-disable-next-line no-console
-        console.log(latestStderr || canaryStderr);
+        console.log(stderr);
         shelljs.cmd('git', 'reset', '--hard', 'HEAD~1');
       }
     } else {
