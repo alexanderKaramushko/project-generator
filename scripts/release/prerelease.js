@@ -11,6 +11,7 @@ const shelljs = require('shelljs');
 const path = require('node:path');
 const syncVersion = require('./sync-version');
 const { enlistPackages } = require('./enlist');
+const commitRelease = require('./commit-release');
 
 async function run() {
   const response = await enlistPackages();
@@ -33,11 +34,12 @@ async function run() {
   if (newVersion && !packageVersions.includes(newVersion)) {
     const { code: exitCode, stderr } = shelljs.cmd('npm', 'publish', '--tag', 'canary');
 
-    shelljs.cmd('git', 'reset', '*');
-    shelljs.cmd('git', 'add', path.join(response.package.packageDir, 'package.json'));
-    shelljs.cmd('git', 'add', path.join(process.cwd(), 'package-lock.json'));
-    shelljs.cmd('git', 'commit', '-m', `canary-релиз версии ${newVersion} пакета ${response.package.packageName}`);
-    shelljs.cmd('git', 'push');
+    commitRelease({
+      packageDir: response.package.packageDir,
+      packageName: response.package.packageName,
+      version: newVersion,
+      versionType: 'canary',
+    });
 
     if (exitCode === 0) {
       // eslint-disable-next-line no-console
