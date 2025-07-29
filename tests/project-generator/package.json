@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./node_modules/.bin/project-generator-cli-js"
   },
-  "devDependencies": {
-    "project-generator-cli-js": "../../packages/project-generator-cli-js"
+  "dependencies": {
+    "project-generator-cli-js": "latest"
   },
   "author": "",
   "license": "ISC"

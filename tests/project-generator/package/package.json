@@ -1,0 +1,21 @@
+{
+  "name": "pg-template-starter",
+  "version": "1.25.0",
+  "keywords": [
+    "starter-pack",
+    "project-generator",
+    "template"
+  ],
+  "main": ".",
+  "types": "./template.ts",
+  "description": "Стартовый шаблон",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderKaramushko/project-generator.git",
+    "directory": "packages/pg-template-starter"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}

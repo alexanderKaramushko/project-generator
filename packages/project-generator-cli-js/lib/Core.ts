@@ -63,6 +63,7 @@ export class Core {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   async createApp() {
+    console.log('HELLO');
     const { dir, template } = this.CLI.getArgs();
     const spinner = yoctoSpinner().start();
 

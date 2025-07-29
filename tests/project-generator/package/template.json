@@ -4,7 +4,7 @@
       "package.json": {
         "name": "pg-template-structure",
         "version": "1.0.0",
-        "description": "Стартовые внутренние файловые структуры проектов по пресетам.",
+        "description": "Стартовые внутренние файловые структуры проектов по пресетам",
         "license": "MIT",
         "repository": {
           "type": "git",
@@ -357,7 +357,7 @@
         ""
       ]
     },
-    "fileStructure": "pg-template-structure-react-typescript",
+    "fileStructure": "pg-template-structure",
     "builder": "esbuild"
   }
 }

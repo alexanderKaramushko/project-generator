@@ -21,6 +21,8 @@
     "packages/**"
   ],
   "scripts": {
+    "link": "./scripts/dev/link.js",
+    "reset:link": "npm i",
     "test": "vitest",
     "test:dev": "vitest watch",
     "canary-release": "scripts/release/prerelease.js",
@@ -36,7 +38,7 @@
     "publish:pg-template-esbuild:minor": "sh ./bump minor pg-template-esbuild",
     "publish:pg-template-esbuild:major": "sh ./bump major pg-template-esbuild",
     "publish:pg-template-structures": "sh ./publish-templates",
-    "postinstall": "chmod +x ./bump & chmod +x ./publish-templates"
+    "postinstall": "chmod +x ./bump & chmod +x ./publish-templates & chmod +x ./scripts/dev/*.js"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.2",

@@ -2,6 +2,6 @@
 
 Инструкция по настройке:
 
-1. `cd tests/project-generator`
-2. `sh sync`
-2. `npm run start -- [-- args]`
+1. В корне проекта вызвать `npm run link tests/project-generator`
+2. `cd packages/project-generator-cli-js`
+3. `npm run build`
