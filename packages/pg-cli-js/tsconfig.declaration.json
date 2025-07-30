@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "declarationDir": "dist"
+  },
+  "include": [
+    "lib/**/*.ts",
+  ],
+  "exclude": [
+    "lib/**/*.test.ts",
+    "lib/**/*.test.tsx"
+  ]
+}

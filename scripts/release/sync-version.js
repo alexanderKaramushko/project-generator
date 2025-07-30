@@ -29,7 +29,7 @@ function syncVersion({ packageDir, packageName, npmTag }) {
     // eslint-disable-next-line no-console
     console.log(`Не удалось синхронизировать версию ${packageName} под тегом ${npmTag}`);
     // eslint-disable-next-line no-console
-    console.log(`Возможно, ${npmTag} еще не был опубликован`);
+    console.log(`Возможно, ${npmTag} еще не был опубликован или пакета нет в npm`);
     return;
   }
 

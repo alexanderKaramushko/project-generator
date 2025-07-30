@@ -27,7 +27,7 @@ async function run() {
   });
 
   const versionUpdate = packageDirContext.cmd('npm', 'version', 'prerelease', '--no-git-tag-version').stdout;
-  const newVersion = versionUpdate.match(/\d+.\d.\d+(?:-\d+)?/, /$1/)[0];
+  const newVersion = versionUpdate.match(/\d+.\d+.\d+(?:-\d+)?/, /$1/)[0];
 
   const packageVersions = shelljs.cmd('npm', 'view', response.package.packageName, 'versions').stdout;
 
