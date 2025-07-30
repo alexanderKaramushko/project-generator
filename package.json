@@ -27,7 +27,7 @@
     "test:dev": "vitest watch",
     "canary-release": "scripts/release/prerelease.js",
     "release": "scripts/release/release.js",
-    "postinstall": "chmod +x ./bump & chmod +x ./publish-templates & chmod +x ./scripts/dev/*.js"
+    "postinstall": "chmod +x ./scripts/dev/*.js"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
