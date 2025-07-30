@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 // 1. prompt, какой пакет нужно публиковать ✅
 // 2. Запустить тесты, если есть ✅
@@ -15,6 +16,14 @@ const commitRelease = require('./commit-release');
 
 async function run() {
   const response = await enlistPackages();
+
+  const hasChanges = !!shelljs.cmd('git', 'status', '--porcelain', response.package.packageDir).stdout;
+
+  if (!hasChanges) {
+    console.log(`Пакет ${response.package.packageName} не опубликован: изменения не найдены`);
+
+    return;
+  }
 
   const packageDirContext = shelljs.cd(response.package.packageDir);
 
@@ -42,15 +51,12 @@ async function run() {
     });
 
     if (exitCode === 0) {
-      // eslint-disable-next-line no-console
       console.log(`Пакет ${response.package.packageName} с версией ${newVersion} опубликован`);
     } else {
-      // eslint-disable-next-line no-console
       console.log(`Пакет ${response.package.packageName} с версией ${newVersion} не удалось опубликовать, попробуйте еще раз`);
-      // eslint-disable-next-line no-console
       console.log('Логи публикации:');
-      // eslint-disable-next-line no-console
       console.log(stderr);
+
       shelljs.cmd('git', 'reset', '--hard', 'HEAD~1');
     }
   } else {

@@ -27,17 +27,6 @@
     "test:dev": "vitest watch",
     "canary-release": "scripts/release/prerelease.js",
     "release": "scripts/release/release.js",
-    "publish:pg-template-starter:minor": "sh ./bump minor pg-template-starter",
-    "publish:pg-template-starter:major": "sh ./bump major pg-template-starter",
-    "publish:pg-cli-js:minor": "sh ./bump minor pg-cli-js",
-    "publish:pg-cli-js:major": "sh ./bump major pg-cli-js",
-    "publish:pg-template-structure:minor": "sh ./bump minor pg-template-structure",
-    "publish:pg-template-structure:major": "sh ./bump major pg-template-structure",
-    "publish:pg-template-builder:minor": "sh ./bump minor pg-template-builder",
-    "publish:pg-template-builder:major": "sh ./bump major pg-template-builder",
-    "publish:pg-template-esbuild:minor": "sh ./bump minor pg-template-esbuild",
-    "publish:pg-template-esbuild:major": "sh ./bump major pg-template-esbuild",
-    "publish:pg-template-structures": "sh ./publish-templates",
     "postinstall": "chmod +x ./bump & chmod +x ./publish-templates & chmod +x ./scripts/dev/*.js"
   },
   "devDependencies": {

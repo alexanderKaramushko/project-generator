@@ -22,6 +22,14 @@ async function run() {
   const response = await enlistPackages();
   const versionType = await enlistVersions();
 
+  const hasChanges = !!shelljs.cmd('git', 'status', '--porcelain', response.package.packageDir).stdout;
+
+  if (!hasChanges) {
+    console.log(`Пакет ${response.package.packageName} не опубликован: изменения не найдены`);
+
+    return;
+  }
+
   try {
     const packageVersions = shelljs.cmd('npm', 'view', response.package.packageName, 'versions');
     let versions = [];
