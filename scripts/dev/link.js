@@ -13,7 +13,7 @@ const packageJSON = path.join(packageDir, 'package.json');
 const { dependencies } = require(packageJSON);
 
 Object.keys(dependencies).forEach((workspacePackage) => {
-  if (workspacePackage.startsWith('pg') || workspacePackage.startsWith('project')) {
+  if (workspacePackage.startsWith('pg')) {
     const dependencyDir = path.join(packagesDir, workspacePackage);
 
     execSync(`

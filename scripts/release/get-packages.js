@@ -13,10 +13,7 @@ function getPackages() {
     .filter(({ packageDir, packageName }) =>
       fs.existsSync(packageDir)
       && fs.statSync(packageDir).isDirectory()
-      && (
-        packageName.startsWith('pg')
-        || packageName.startsWith('project')
-      ));
+      && (packageName.startsWith('pg')));
 }
 
 module.exports = getPackages;
