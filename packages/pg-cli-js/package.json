@@ -1,6 +1,6 @@
 {
   "name": "pg-cli-js",
-  "version": "1.17.1-0",
+  "version": "1.17.1-1",
   "description": "CLI для генерации проекта из шаблонов",
   "keywords": [
     "typescript",
