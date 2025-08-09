@@ -1,7 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "module": "AMD",
+      "module": "AMD",
       "outFile": "./dist-docs/index.js",
       "noEmit": false,
       "declaration": false,
