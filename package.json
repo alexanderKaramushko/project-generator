@@ -29,6 +29,18 @@
     "release": "scripts/release/release.js",
     "postinstall": "chmod +x ./scripts/dev/*.js"
   },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "envinfo": "^7.13.0",
+    "lodash.merge": "^4.6.2",
+    "pg-template-starter": "latest",
+    "prompts": "^2.4.2",
+    "rimraf": "^5.0.5",
+    "yocto-spinner": "^0.2.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",

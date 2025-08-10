@@ -30,17 +30,17 @@
     "build:docs": "tsc --project tsconfig.docs.json",
     "jsdoc": "npm run build:docs && jsdoc -a all -c jsdoc.json -r -R README.md dist-docs/index.js -d docs/jsdoc"
   },
-  "dependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0",
-    "envinfo": "^7.13.0",
-    "lodash.merge": "^4.6.2",
+  "peerDependencies": {
+    "ajv": "*",
+    "ajv-formats": "*",
+    "chalk": "*",
+    "commander": "*",
+    "envinfo": "*",
+    "lodash.merge": "*",
     "pg-template-starter": "*",
-    "prompts": "^2.4.2",
-    "rimraf": "^5.0.5",
-    "yocto-spinner": "^0.2.0"
+    "prompts": "*",
+    "rimraf": "*",
+    "yocto-spinner": "*"
   },
   "devDependencies": {
     "@types/envinfo": "^7.8.4",
