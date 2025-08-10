@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import async from 'async';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import dns from 'dns';
@@ -63,9 +64,12 @@ export class Core {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
   async createApp() {
-    console.log('HELLO');
     const { dir, template } = this.CLI.getArgs();
     const spinner = yoctoSpinner().start();
+
+    async(
+
+    );
 
     if (!existsSync(dir)) {
       spinner.text = chalk.blue(`Указанной директории ${dir} нет, создаем...`);

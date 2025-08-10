@@ -40,7 +40,8 @@
     "pg-template-starter": "*",
     "prompts": "*",
     "rimraf": "*",
-    "yocto-spinner": "*"
+    "yocto-spinner": "*",
+    "async": "*"
   },
   "devDependencies": {
     "@types/envinfo": "^7.8.4",
