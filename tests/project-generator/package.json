@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./node_modules/.bin/pg-cli-js"
+    "start": "node ./node_modules/.bin/pg-cli-js project --template=react-typescript"
   },
   "dependencies": {
     "pg-cli-js": "latest"
