@@ -39,9 +39,9 @@ type FileContent = string;
  * Должно быть два конфига: внешний (инфраструктурный, eslint, jest и т.д) и внутренний (проект с dev-зависимостями).
  * Внутренний конфиг подключает внешний через определеное поле в пакете.
  * Шаги:
- * – fileStructure нужно убрать из pg-template-starter.
- * – Сам pg-template-starter переименовать в pg-template-configs.
- * – После загрузки шаблона из structures прочитать поле externalConfigName
+ * – fileStructure нужно убрать из pg-template-starter. \n
+ * – Сам pg-template-starter переименовать в pg-template-configs. \n
+ * – После загрузки шаблона из structures прочитать поле externalConfigName \n
  * – Скачать внешний конфиг по externalConfigName
  */
 export class Core {
