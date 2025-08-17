@@ -64,18 +64,6 @@ var __createBinding = (this &amp;&amp; this.__createBinding) || (Object.create ?
 var __exportStar = (this &amp;&amp; this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" &amp;&amp; !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
-var __setModuleDefault = (this &amp;&amp; this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this &amp;&amp; this.__importStar) || function (mod) {
-    if (mod &amp;&amp; mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 define("package", [], {
     "name": "root",
     "version": "0.0.0",
@@ -107,9 +95,23 @@ define("package", [], {
         "release": "scripts/release/release.js",
         "postinstall": "chmod +x ./scripts/dev/*.js"
     },
+    "dependencies": {
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
+        "async": "^3.2.6",
+        "chalk": "^5.3.0",
+        "commander": "^12.1.0",
+        "envinfo": "^7.13.0",
+        "lodash.merge": "^4.6.2",
+        "pg-template-starter": "latest",
+        "prompts": "^2.4.2",
+        "rimraf": "^5.0.5",
+        "yocto-spinner": "^0.2.0"
+    },
     "devDependencies": {
         "@commitlint/cli": "17.4.2",
         "@commitlint/config-conventional": "17.4.2",
+        "@types/async": "^3.2.25",
         "@typescript-eslint/eslint-plugin": "^5.46.1",
         "@typescript-eslint/parser": "^5.46.1",
         "eslint": "^7.19.0",
@@ -4250,19 +4252,42 @@ define("packages/pg-cli-js/lib/template-validator/index", ["require", "exports",
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(TemplateValidator_1, exports);
 });
-define("packages/pg-cli-js/lib/utils/createRWFile", ["require", "exports", "child_process", "node:fs"], function (require, exports, child_process_1, node_fs_1) {
+define("packages/pg-cli-js/lib/utils/identity", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.identity = identity;
+    /**
+     * Создает обертку вокруг переданной функции, которая вызывает ее с переданными параметрами.
+     * @internal
+     *
+     * @template T - Тип функции, которую нужно обернуть.
+     * @template P - Типы параметров функции.
+     * @param {T} callback - Функция, которую необходимо обернуть.
+     * @returns {function(...P): ReturnType&lt;T>} - Обертка, вызывающая исходную функцию с переданными аргументами.
+     */
+    function identity(callback) {
+        return function identityWrapper(firstArg) {
+            return callback(firstArg);
+        };
+    }
+});
+define("packages/pg-cli-js/lib/utils/createRWFile", ["require", "exports", "async", "node:child_process", "node:fs", "packages/pg-cli-js/lib/utils/identity"], function (require, exports, async_1, node_child_process_1, node_fs_1, identity_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.createRWFile = createRWFile;
+    async_1 = __importDefault(async_1);
     /**
-     * Создает файл с заданным именем для чтения и записи.
+     * Создает файл по указанному пути и записывает в него содержимое.
+     * Если файл уже существует, вызывает callback с null.
      *
-     * @param {string} src - Путь до файла c расширением, который нужно создать.
-     * @param {string | string[]} content - Контент файла.
+     * @param {string} path - Путь к файлу, который нужно создать.
+     * @param {string | string[]} content - Контент для записи в файл. Может быть строкой или массивом строк.
+     * @param {ErrorCallback} callback - Коллбек, вызываемый после завершения операции.
+     * В случае успеха вызывается с аргументом null, в случае ошибки — с объектом ошибки.
      */
-    function createRWFile(src, content) {
-        if ((0, node_fs_1.existsSync)(src)) {
-            return;
+    function createRWFile(path, content, callback) {
+        if ((0, node_fs_1.existsSync)(path)) {
+            return callback(null);
         }
         // eslint-disable-next-line no-underscore-dangle
         let _content = '';
@@ -4272,12 +4297,18 @@ define("packages/pg-cli-js/lib/utils/createRWFile", ["require", "exports", "chil
         else {
             _content = JSON.stringify(content);
         }
-        (0, child_process_1.execSync)(`touch ${src}`);
-        (0, child_process_1.execSync)(`chmod uo+rw ${src}`);
-        (0, node_fs_1.appendFileSync)(src, _content, 'utf-8');
+        async_1.default.waterfall([
+            function createFile(innerCallback) {
+                (0, node_child_process_1.exec)(`touch ${path} &amp;&amp; chmod uo+rw ${path}`, (0, identity_1.identity)(innerCallback));
+            },
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            function updateFile(innerCallback) {
+                (0, node_fs_1.appendFile)(path, _content, 'utf-8', (0, identity_1.identity)(innerCallback));
+            },
+        ], (0, identity_1.identity)(callback));
     }
 });
-define("packages/pg-cli-js/lib/utils/mergeJSONFile", ["require", "exports", "lodash.merge", "node:fs"], function (require, exports, lodash_merge_1, node_fs_2) {
+define("packages/pg-cli-js/lib/utils/mergeJSONFile", ["require", "exports", "lodash.merge", "node:fs", "packages/pg-cli-js/lib/utils/identity"], function (require, exports, lodash_merge_1, node_fs_2, identity_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.mergeJSONFile = mergeJSONFile;
@@ -4290,36 +4321,30 @@ define("packages/pg-cli-js/lib/utils/mergeJSONFile", ["require", "exports", "lod
      *
      * @param {string} name - Имя файла, который нужно объединить.
      * @param {Record&lt;string, any>} mergedContent - Данные, которые будут объединены с содержимым файла.
-     * @throws {Error} - Если файл не может быть прочитан или записан.
+     * @param {ErrorCallback} callback - Коллбек, вызываемый после завершения операции.
+     * В случае успеха вызывается с аргументом null, в случае ошибки — с объектом ошибки.
      */
-    function mergeJSONFile(name, mergedContent) {
+    function mergeJSONFile(name, mergedContent, callback) {
         const content = (0, node_fs_2.readFileSync)(name, { encoding: 'utf8' });
-        (0, node_fs_2.writeFileSync)(name, JSON.stringify((0, lodash_merge_1.default)(JSON.parse(content), mergedContent), (key, value) => value, 2));
+        (0, node_fs_2.writeFile)(name, JSON.stringify((0, lodash_merge_1.default)(JSON.parse(content), mergedContent), (key, value) => value, 2), (0, identity_2.identity)(callback));
     }
 });
-define("packages/pg-cli-js/lib/utils/index", ["require", "exports", "packages/pg-cli-js/lib/utils/createRWFile", "packages/pg-cli-js/lib/utils/mergeJSONFile"], function (require, exports, createRWFile_1, mergeJSONFile_1) {
+define("packages/pg-cli-js/lib/utils/index", ["require", "exports", "packages/pg-cli-js/lib/utils/createRWFile", "packages/pg-cli-js/lib/utils/mergeJSONFile", "packages/pg-cli-js/lib/utils/identity"], function (require, exports, createRWFile_1, mergeJSONFile_1, identity_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(createRWFile_1, exports);
     __exportStar(mergeJSONFile_1, exports);
+    __exportStar(identity_3, exports);
 });
-define("packages/pg-cli-js/lib/Core", ["require", "exports", "chalk", "child_process", "dns", "node:fs", "node:path", "yocto-spinner", "packages/pg-cli-js/lib/template-validator/index", "packages/pg-cli-js/lib/utils/index"], function (require, exports, chalk_4, child_process_2, dns_1, node_fs_3, node_path_1, yocto_spinner_1, template_validator_1, utils_1) {
+define("packages/pg-cli-js/lib/Core", ["require", "exports", "async", "chalk", "child_process", "dns", "node:fs", "node:path", "yocto-spinner", "packages/pg-cli-js/lib/template-validator/index", "packages/pg-cli-js/lib/utils/index"], function (require, exports, async_2, chalk_4, child_process_1, dns_1, node_fs_3, node_path_1, yocto_spinner_1, template_validator_1, utils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Core = void 0;
+    async_2 = __importDefault(async_2);
     chalk_4 = __importDefault(chalk_4);
     dns_1 = __importDefault(dns_1);
-    node_fs_3 = __importStar(node_fs_3);
     node_path_1 = __importDefault(node_path_1);
     yocto_spinner_1 = __importDefault(yocto_spinner_1);
-    const artifactsNames = ['template.json', 'template.ts'];
-    function checkIfOnline() {
-        return new Promise((resolve) => {
-            dns_1.default.lookup('registry.yarnpkg.com', (error) => {
-                resolve(error == null);
-            });
-        });
-    }
     /**
      * @namespace Core
      * @description Класс генерации проекта из пресетов.
@@ -4361,78 +4386,174 @@ define("packages/pg-cli-js/lib/Core", ["require", "exports", "chalk", "child_pro
          * 3. Устанавливает зависимости
          * 4. Подготовка (линтинг, гит)
          */
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
         async createApp() {
-            console.log('HELLO');
             const { dir, template } = this.CLI.getArgs();
             const spinner = (0, yocto_spinner_1.default)().start();
-            if (!(0, node_fs_3.existsSync)(dir)) {
-                spinner.text = chalk_4.default.blue(`Указанной директории ${dir} нет, создаем...`);
-                (0, node_fs_3.mkdirSync)(dir, { recursive: true });
+            let packageDir;
+            let starterTemplateData;
+            let pickedTemplate;
+            let projectDir;
+            let presetsDir;
+            let fileStructureDir;
+            // eslint-disable-next-line consistent-return
+            function checkAndMaybeCreateDir(callback) {
+                if (!(0, node_fs_3.existsSync)(dir)) {
+                    spinner.text = chalk_4.default.blue(`Указанной директории ${dir} нет, создаем...`);
+                    (0, node_fs_3.mkdir)(dir, { recursive: true }, (0, utils_1.identity)(callback));
+                }
+                else {
+                    return callback(null);
+                }
             }
-            if (await checkIfOnline()) {
-                console.log(chalk_4.default.green('Вы в сети'));
+            function checkIfOnline(callback) {
+                dns_1.default.lookup('registry.yarnpkg.com', (0, utils_1.identity)(callback));
             }
-            else {
-                console.log(chalk_4.default.red('Похоже, что вы отключены от сети'));
-                process.exit(1);
+            function downloadTemplate(callback) {
+                spinner.text = chalk_4.default.blue('Скачивание стартового шаблона...');
+                (0, child_process_1.exec)('npm pack pg-template-starter -s', callback);
             }
-            spinner.text = chalk_4.default.blue('Скачивание стартового шаблона...');
-            (0, child_process_2.execSync)('npm pack pg-template-starter -s');
-            spinner.text = chalk_4.default.blue('Распаковка шаблона...');
-            (0, child_process_2.execSync)(`tar -xf pg-template-starter-*.tgz -C ${dir} &amp;&amp; rm pg-template-starter-*.tgz`);
-            const packageDir = node_path_1.default.resolve(dir, 'package');
-            const starterTemplateJSON = (0, node_fs_3.readFileSync)(node_path_1.default.resolve(packageDir, 'template.json'), { encoding: 'utf-8' });
-            const starterTemplateData = JSON.parse(starterTemplateJSON);
-            if (!Reflect.has(starterTemplateData, template)) {
-                console.log(chalk_4.default.red('Не найден шаблон! Похоже, передан неверный template'));
-                (0, child_process_2.execSync)(`rm -r ${dir}`);
-                spinner.stop();
-                return;
+            function setupTemplate(stdout, stderr, callback) {
+                spinner.text = chalk_4.default.blue('Распаковка шаблона...');
+                (0, child_process_1.exec)(`tar -xf ${stdout.trim()} -C ${dir} &amp;&amp; rm ${stdout.trim()}`, (0, utils_1.identity)(callback));
             }
-            const pickedTemplate = starterTemplateData[template];
-            const templateValidator = new template_validator_1.TemplateValidator(pickedTemplate);
-            const valid = templateValidator.validate();
-            if (!valid) {
-                return;
+            function getTemplateData(callback) {
+                packageDir = node_path_1.default.resolve(dir, 'package');
+                (0, node_fs_3.readFile)(node_path_1.default.resolve(packageDir, 'template.json'), { encoding: 'utf-8' }, callback);
             }
-            spinner.text = chalk_4.default.blue('Создание конфигов...');
-            Object.entries(pickedTemplate.configs).forEach(([config, content]) => {
-                if (content) {
-                    (0, utils_1.createRWFile)(node_path_1.default.resolve(packageDir, config), content);
+            // eslint-disable-next-line consistent-return
+            function hasTemplate(data, callback) {
+                spinner.text = chalk_4.default.blue('Проверка шаблона...');
+                try {
+                    starterTemplateData = JSON.parse(data);
+                    if (!Reflect.has(starterTemplateData, template)) {
+                        (0, child_process_1.exec)(`rm -r ${dir}`, (0, utils_1.identity)(callback));
+                    }
+                    else {
+                        return callback(null);
+                    }
+                }
+                catch (error) {
+                    return callback(new Error(`Не удалось распарсить шаблон: ${template}`));
+                }
+            }
+            function validateTemplate(callback) {
+                spinner.text = chalk_4.default.blue('Валидация шаблона...');
+                pickedTemplate = starterTemplateData[template];
+                const templateValidator = new template_validator_1.TemplateValidator(pickedTemplate);
+                const valid = templateValidator.validate();
+                if (!valid) {
+                    return callback(new Error(`Невалидный шаблон ${template}`));
+                }
+                return callback(null);
+            }
+            function createConfigs(callback) {
+                spinner.text = chalk_4.default.blue('Создание конфигов...');
+                async_2.default.each(Object.entries(pickedTemplate.configs), ([config, content], innerCallback) => {
+                    if (content &amp;&amp; !(0, node_fs_3.existsSync)(node_path_1.default.resolve(packageDir, config))) {
+                        (0, utils_1.createRWFile)(node_path_1.default.resolve(packageDir, config), content, innerCallback);
+                    }
+                    else {
+                        innerCallback(null);
+                    }
+                }, (0, utils_1.identity)(callback));
+            }
+            function downloadFileStructure(callback) {
+                spinner.text = chalk_4.default.blue('Скачивание стартовой файловой структуры');
+                (0, child_process_1.exec)(`npm pack ${pickedTemplate.fileStructure} -s`, (0, utils_1.identity)(callback));
+            }
+            function setupFileStructure(callback) {
+                spinner.text = chalk_4.default.blue('Распаковка файловой структуры');
+                (0, child_process_1.exec)(`tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} &amp;&amp; rm ${pickedTemplate.fileStructure}-*.tgz`, (0, utils_1.identity)(callback));
+            }
+            function createFileStructure(callback) {
+                spinner.text = chalk_4.default.blue('Создание структуры пресета...');
+                projectDir = node_path_1.default.resolve(packageDir, 'project');
+                presetsDir = node_path_1.default.resolve(packageDir, 'presets');
+                fileStructureDir = node_path_1.default.resolve(presetsDir, template);
+                async_2.default.waterfall([
+                    function getPresetFiles(innerCallback) {
+                        (0, node_fs_3.readdir)(fileStructureDir, innerCallback);
+                    },
+                    function createPresetFiles(files, innerCallback) {
+                        async_2.default.each(files, (name, cb) => {
+                            (0, child_process_1.exec)(`mv -n ${node_path_1.default.resolve(presetsDir, template, name)} ${projectDir}`, cb);
+                        }, (0, utils_1.identity)(innerCallback));
+                    },
+                    function deletePresets(innerCallback) {
+                        (0, child_process_1.exec)(`rm -rf ${presetsDir}`, (0, utils_1.identity)(innerCallback));
+                    },
+                ], (0, utils_1.identity)(callback));
+            }
+            function createPackages(callback) {
+                spinner.text = chalk_4.default.blue('Создание пакетов...');
+                async_2.default.each(Object.entries(pickedTemplate.projects), ([project, content], innerCallback) => {
+                    if (content) {
+                        (0, utils_1.mergeJSONFile)(node_path_1.default.resolve(packageDir, project), content, innerCallback);
+                    }
+                }, (0, utils_1.identity)(callback));
+            }
+            function installDependencies(callback) {
+                spinner.text = chalk_4.default.blue('Установка зависимостей...');
+                async_2.default.each([
+                    // Решение проблемы со установкой пакетов шаблона через userconfig
+                    `cd ${packageDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`,
+                    `cd ${packageDir} &amp;&amp; npm install --legacy-peer-deps -s`,
+                    // Решение проблемы со установкой пакетов шаблона через userconfig
+                    `cd ${projectDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`,
+                    `cd ${projectDir} &amp;&amp; npm install --legacy-peer-deps -s`,
+                ], (command, innerCollback) => {
+                    (0, child_process_1.exec)(command, innerCollback);
+                }, (0, utils_1.identity)(callback));
+            }
+            function deleteArtifacts(callback) {
+                spinner.text = chalk_4.default.blue('Удаление артифактов...');
+                const artifactsNames = ['template.json', 'template.ts'];
+                async_2.default.each(artifactsNames, (artifactName, innerCollback) => {
+                    (0, node_fs_3.rm)(node_path_1.default.resolve(packageDir, artifactName), innerCollback);
+                }, (0, utils_1.identity)(callback));
+            }
+            function setupGit(callback) {
+                spinner.text = chalk_4.default.blue('Установка git...');
+                (0, child_process_1.exec)(`cd ${packageDir} &amp;&amp; git init &amp;&amp; git add . &amp;&amp; git commit  -m 'initial commit'`, (0, utils_1.identity)(callback));
+            }
+            function prepareProject(callback) {
+                spinner.text = chalk_4.default.blue('Подготовка проекта...');
+                async_2.default.parallel([
+                    installDependencies,
+                    deleteArtifacts,
+                    setupGit,
+                ], (0, utils_1.identity)(callback));
+            }
+            function lint(callback) {
+                spinner.text = chalk_4.default.blue('Линтинг...');
+                (0, child_process_1.exec)(`cd ${packageDir} &amp;&amp; yarn lint:fix`, callback);
+            }
+            async_2.default.waterfall([
+                checkAndMaybeCreateDir,
+                checkIfOnline,
+                downloadTemplate,
+                setupTemplate,
+                getTemplateData,
+                hasTemplate,
+                validateTemplate,
+                createConfigs,
+                downloadFileStructure,
+                setupFileStructure,
+                createFileStructure,
+                createPackages,
+                prepareProject,
+                lint,
+                // eslint-disable-next-line @typescript-eslint/no-shadow
+            ], function finalCallback(err) {
+                if (err) {
+                    console.log('\n');
+                    console.log(chalk_4.default.red(err.message));
+                    spinner.stop();
+                }
+                else {
+                    spinner.stop(chalk_4.default.green(`Проект установлен в ${dir} •͡˘㇁•͡˘`));
                 }
             });
-            spinner.text = chalk_4.default.blue('Скачивание стартовой файловой структуры');
-            (0, child_process_2.execSync)(`npm pack ${pickedTemplate.fileStructure} -s`);
-            spinner.text = chalk_4.default.blue('Распаковка файловой структуры');
-            (0, child_process_2.execSync)(`tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} &amp;&amp; rm ${pickedTemplate.fileStructure}-*.tgz`);
-            const projectDir = node_path_1.default.resolve(packageDir, 'project');
-            const filesPresets = node_path_1.default.resolve(packageDir, 'presets');
-            const fileStructureDir = node_path_1.default.resolve(filesPresets, template);
-            const structureList = (0, node_fs_3.readdirSync)(fileStructureDir);
-            spinner.text = chalk_4.default.blue('Создание структуры пресета...');
-            structureList.forEach((name) => {
-                (0, child_process_2.execSync)(`mv -n ${node_path_1.default.resolve(filesPresets, template, name)} ${projectDir}`);
-            });
-            (0, child_process_2.execSync)(`rm -rf ${filesPresets}`);
-            spinner.text = chalk_4.default.blue('Создание пакетов...');
-            Object.entries(pickedTemplate.projects).forEach(([project, content]) => {
-                if (content) {
-                    (0, utils_1.mergeJSONFile)(node_path_1.default.resolve(packageDir, project), content);
-                }
-            });
-            spinner.text = chalk_4.default.blue('Установка зависимостей...');
-            // Решение проблемы со установкой пакетов шаблона
-            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; npm install --legacy-peer-deps -s`);
-            // Решение проблемы со установкой пакетов шаблона
-            (0, child_process_2.execSync)(`cd ${projectDir} &amp;&amp; npm config set registry https://registry.npmjs.com/ --userconfig .npmrc`);
-            (0, child_process_2.execSync)(`cd ${projectDir} &amp;&amp; npm install --legacy-peer-deps -s`);
-            spinner.text = chalk_4.default.blue('Подготовка проекта...');
-            artifactsNames.forEach((artifactName) => (node_fs_3.default.rmSync(node_path_1.default.resolve(packageDir, artifactName))));
-            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; yarn lint:fix`);
-            (0, child_process_2.execSync)(`cd ${packageDir} &amp;&amp; git init &amp;&amp; git add . &amp;&amp; git commit  -m 'initial commit'`);
-            spinner.stop(chalk_4.default.green('Готово •͡˘㇁•͡˘'));
         }
     }
     exports.Core = Core;
@@ -4460,7 +4581,7 @@ define("packages/pg-cli-js/lib/index", ["require", "exports", "dotenv", "package
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed Jul 30 2025 14:54:50 GMT+0400 (Samara Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sun Aug 17 2025 14:35:00 GMT+0400 (Samara Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
