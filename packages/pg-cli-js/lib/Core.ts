@@ -62,10 +62,30 @@ export class Core {
     const spinner = yoctoSpinner().start();
 
     let packageDir: string;
+
+    /**
+     * Базовый конфиги шаблона: инфраструктурые зависимости
+     */
     let starterTemplateData: Template;
+
+    /**
+     * Выбранные базовый конфиг шаблона
+     */
     let pickedTemplate: Record<string, any>;
+
+    /**
+     * Путь, куда устанавливается проект
+     */
     let projectDir: string;
+
+    /**
+     * Путь до пресетов, например, presets/react-typescript
+     */
     let presetsDir: string;
+
+    /**
+     * Путь, куда устанавливаются пресеты, например, presets/react-typescript -> project
+     */
     let fileStructureDir: string;
 
     // eslint-disable-next-line consistent-return
