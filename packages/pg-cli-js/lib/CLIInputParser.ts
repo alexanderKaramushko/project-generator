@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import { program } from 'commander';
 import envinfo from 'envinfo';
+import os from 'node:os';
 
 import packageJson from '../../../package.json';
 import { CLIAbstractParser } from './CLIAbstractParser';
@@ -46,9 +47,9 @@ export class CLIInputParser extends CLIAbstractParser {
     const options = program.opts();
 
     if (options.info) {
-      console.log(chalk.bold('\nИнформация об окружении:'));
+      console.log(chalk.bold(`${os.EOL}Информация об окружении:`));
       console.log(
-        `\n  текущая версия ${packageJson.name}: ${packageJson.version}`,
+        `${os.EOL}  текущая версия ${packageJson.name}: ${packageJson.version}`,
       );
       console.log(`Запущен из ${__dirname}`);
 

@@ -7,6 +7,7 @@ import { exec } from 'child_process';
 import dns from 'dns';
 import { ExecException } from 'node:child_process';
 import { existsSync, mkdir, readdir, readFile, rm } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { Template } from 'pg-template-starter';
 import yoctoSpinner from 'yocto-spinner';
@@ -23,7 +24,13 @@ type FileContent = string;
  *
  * @todo Добавить codegen в зависимости от прописанного templateName в package.json после генерации проекта
  * @todo Перевести пакеты на type: module
+ *
  * @todo Добавить файл логов pg-generator-debug.log
+ * 1. Открыть стрим записи логов в файл
+ * 2. Отослать лог через proc-log
+ * 3. Прослушивать лог через process.on('log')
+ * 4. Отформатировать лог, если надо ???
+ * 4. Записать лог в файл
  *
  * External
  * @todo Исследовать возможность парсинга и переноса todo в issues через github api.
@@ -275,7 +282,7 @@ export class Core {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     ], function finalCallback(err: NodeJS.ErrnoException | Error | null | undefined) {
       if (err) {
-        console.log('\n');
+        console.log(os.EOL);
         console.log(chalk.red(err.message));
 
         spinner.stop();
