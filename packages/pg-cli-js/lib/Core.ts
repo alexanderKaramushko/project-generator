@@ -13,6 +13,7 @@ import { Template } from 'pg-template-starter';
 import yoctoSpinner from 'yocto-spinner';
 
 import { CLIAbstractParser } from './CLIAbstractParser';
+import { Logger } from './logger';
 import { TemplateValidator } from './template-validator';
 import { createRWFile, identity, mergeJSONFile } from './utils';
 
@@ -24,13 +25,8 @@ type FileContent = string;
  *
  * @todo Добавить codegen в зависимости от прописанного templateName в package.json после генерации проекта
  * @todo Перевести пакеты на type: module
+ * @todo Сделать graceful shutdown
  *
- * @todo Добавить файл логов pg-generator-debug.log
- * 1. Открыть стрим записи логов в файл
- * 2. Отослать лог через proc-log
- * 3. Прослушивать лог через process.on('log')
- * 4. Отформатировать лог, если надо ???
- * 4. Записать лог в файл
  *
  * External
  * @todo Исследовать возможность парсинга и переноса todo в issues через github api.
@@ -65,6 +61,10 @@ export class Core {
    * 4. Подготовка (линтинг, гит)
    */
   async createApp() {
+    const logger = new Logger();
+
+    logger.start();
+
     const { dir, template } = this.CLI.getArgs();
     const spinner = yoctoSpinner().start();
 
@@ -98,6 +98,7 @@ export class Core {
     // eslint-disable-next-line consistent-return
     function checkAndMaybeCreateDir(callback: ErrorCallback) {
       if (!existsSync(dir)) {
+        Logger.logInfo(`Указанной директории ${dir} нет, создаем`);
         spinner.text = chalk.blue(`Указанной директории ${dir} нет, создаем...`);
         mkdir(dir, { recursive: true }, identity(callback));
       } else {
@@ -106,17 +107,20 @@ export class Core {
     }
 
     function checkIfOnline(callback: ErrorCallback) {
+      Logger.logInfo('Проверка сети');
       dns.lookup('registry.yarnpkg.com', identity(callback));
     }
 
     function downloadTemplate(
       callback: AsyncResultRestCallback<string, ExecException | null>,
     ) {
+      Logger.logInfo('Скачивание стартового шаблона');
       spinner.text = chalk.blue('Скачивание стартового шаблона...');
       exec('npm pack pg-template-starter -s', callback);
     }
 
     function setupTemplate(stdout: string, stderr: string, callback: ErrorCallback) {
+      Logger.logInfo('Распаковка шаблона');
       spinner.text = chalk.blue('Распаковка шаблона...');
       exec(`tar -xf ${stdout.trim()} -C ${dir} && rm ${stdout.trim()}`, identity(callback));
     }
@@ -124,6 +128,7 @@ export class Core {
     function getTemplateData(callback: AsyncResultCallback<FileContent, NodeJS.ErrnoException | null>) {
       packageDir = path.resolve(dir, 'package');
 
+      Logger.logInfo(`Чтение шаблона ${path.resolve(packageDir, 'template.json')}`);
       readFile(path.resolve(packageDir, 'template.json'), { encoding: 'utf-8' }, callback);
     }
 
@@ -132,12 +137,14 @@ export class Core {
       spinner.text = chalk.blue('Проверка шаблона...');
 
       try {
+        Logger.logInfo('Парсинг шаблона');
         starterTemplateData = JSON.parse(data) as Template;
 
         if (!Reflect.has(starterTemplateData, template)) {
+          Logger.logInfo('Шаблон не найден. Удаление директории со скачанным пакетом');
           exec(`rm -r ${dir}`, identity(callback));
         } else {
-
+          Logger.logWarning(`Шаблон ${template} найден`);
           return callback(null);
         }
       } catch (error) {
@@ -146,6 +153,7 @@ export class Core {
     }
 
     function validateTemplate(callback: ErrorCallback) {
+      Logger.logInfo('Валидация шаблона');
       spinner.text = chalk.blue('Валидация шаблона...');
 
       pickedTemplate = starterTemplateData[template];
@@ -157,6 +165,8 @@ export class Core {
         return callback(new Error(`Невалидный шаблон ${template}`));
       }
 
+      Logger.logInfo('Шаблон валиден');
+
       return callback(null);
     }
 
@@ -164,28 +174,35 @@ export class Core {
       spinner.text = chalk.blue('Создание конфигов...');
 
       async.each(Object.entries(pickedTemplate.configs), ([config, content], innerCallback) => {
-        if (content && !existsSync(path.resolve(packageDir, config))) {
-          createRWFile(path.resolve(packageDir, config), content as string | string[], innerCallback);
+        const configDir = path.resolve(packageDir, config);
+
+        if (content && !existsSync(configDir)) {
+          Logger.logInfo(`Создание конфига ${configDir}`);
+          createRWFile(configDir, content as string | string[], innerCallback);
         } else {
+          Logger.logInfo(`Конфиг ${configDir} уже существует`);
           innerCallback(null);
         }
       }, identity(callback));
     }
 
     function downloadFileStructure(callback: ErrorCallback) {
-      spinner.text = chalk.blue('Скачивание стартовой файловой структуры');
+      Logger.logInfo('Скачивание стартовой файловой структуры');
+      spinner.text = chalk.blue('Скачивание стартовой файловой структуры...');
       exec(`npm pack ${pickedTemplate.fileStructure} -s`, identity(callback));
     }
 
     function setupFileStructure(callback: ErrorCallback) {
-      spinner.text = chalk.blue('Распаковка файловой структуры');
+      Logger.logInfo('Распаковка файловой структуры');
+      spinner.text = chalk.blue('Распаковка файловой структуры...');
       exec(
-        `tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`,
+        `tar -xf ${pickedTemplate.fileStructure}-*..tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`,
         identity(callback),
       );
     }
 
     function createFileStructure(callback: ErrorCallback) {
+      Logger.logInfo('Создание структуры пресета');
       spinner.text = chalk.blue('Создание структуры пресета...');
 
       projectDir = path.resolve(packageDir, 'project');
@@ -194,14 +211,17 @@ export class Core {
 
       async.waterfall([
         function getPresetFiles(innerCallback: AsyncResultCallback<any, any>) {
+          Logger.logInfo(`Чтение директории пресета ${fileStructureDir}...`);
           readdir(fileStructureDir, innerCallback);
         },
         function createPresetFiles(files: string[], innerCallback: ErrorCallback) {
           async.each(files, (name, cb: ErrorCallback) => {
+            Logger.logInfo(`Создание файла пресета ${path.resolve(presetsDir, template, name)}`);
             exec(`mv -n ${path.resolve(presetsDir, template, name)} ${projectDir}`, cb);
           }, identity(innerCallback));
         },
         function deletePresets(innerCallback: ErrorCallback) {
+          Logger.logInfo(`Удаление директории пресетов ${presetsDir}`);
           exec(`rm -rf ${presetsDir}`, identity(innerCallback));
         },
       ], identity(callback));
@@ -212,12 +232,14 @@ export class Core {
 
       async.each(Object.entries(pickedTemplate.projects), ([project, content], innerCallback) => {
         if (content) {
+          Logger.logInfo(`Создание пакета ${path.resolve(packageDir, project)}`);
           mergeJSONFile(path.resolve(packageDir, project), content, innerCallback);
         }
       }, identity(callback));
     }
 
     function installDependencies(callback: ErrorCallback) {
+      Logger.logInfo('Установка зависимостей');
       spinner.text = chalk.blue('Установка зависимостей...');
 
       async.each([
@@ -238,17 +260,20 @@ export class Core {
       const artifactsNames = ['template.json', 'template.ts'];
 
       async.each(artifactsNames, (artifactName, innerCollback) => {
+        Logger.logInfo(`Удаление артифакта ${artifactName}`);
         rm(path.resolve(packageDir, artifactName), innerCollback);
       }, identity(callback));
     }
 
     function setupGit(callback: ErrorCallback) {
+      Logger.logInfo('Установка git');
       spinner.text = chalk.blue('Установка git...');
 
       exec(`cd ${packageDir} && git init && git add . && git commit  -m 'initial commit'`, identity(callback));
     }
 
     function prepareProject(callback: ErrorCallback) {
+      Logger.logInfo('Подготовка проекта');
       spinner.text = chalk.blue('Подготовка проекта...');
 
       async.parallel([
@@ -259,6 +284,7 @@ export class Core {
     }
 
     function lint(callback: ErrorCallback) {
+      Logger.logInfo('Линтинг');
       spinner.text = chalk.blue('Линтинг...');
 
       exec(`cd ${packageDir} && yarn lint:fix`, callback);
@@ -282,13 +308,18 @@ export class Core {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     ], function finalCallback(err: NodeJS.ErrnoException | Error | null | undefined) {
       if (err) {
+        Logger.logError(err.message);
+
         console.log(os.EOL);
         console.log(chalk.red(err.message));
+        console.log(chalk.grey(`Подробные логи: ${logger.logFilePath}`));
 
         spinner.stop();
       } else {
         spinner.stop(chalk.green(`Проект установлен в ${dir} •͡˘㇁•͡˘`));
       }
+
+      logger.end();
     });
   }
 

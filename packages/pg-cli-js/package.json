@@ -1,6 +1,6 @@
 {
   "name": "pg-cli-js",
-  "version": "1.17.1-0",
+  "version": "1.17.1-2",
   "description": "CLI для генерации проекта из шаблонов",
   "keywords": [
     "typescript",
@@ -23,16 +23,10 @@
   "bin": {
     "pg-cli-js": "./bin/pg-cli-js.js"
   },
-  "scripts": {
-    "prepublishOnly": "npm run build && clean-package",
-    "start": "cross-env NODE_ENV=develop nodemon lib/index.ts",
-    "build": "tsx esbuild/esbuild.prod.ts && tsc-alias -p tsconfig.alias.json",
-    "build:docs": "tsc --project tsconfig.docs.json",
-    "jsdoc": "npm run build:docs && jsdoc -a all -c jsdoc.json -r -R README.md dist-docs/index.js -d docs/jsdoc"
-  },
   "peerDependencies": {
     "ajv": "*",
     "ajv-formats": "*",
+    "async": "*",
     "chalk": "*",
     "commander": "*",
     "envinfo": "*",
@@ -41,37 +35,6 @@
     "prompts": "*",
     "rimraf": "*",
     "yocto-spinner": "*",
-    "async": "*"
-  },
-  "devDependencies": {
-    "@types/envinfo": "^7.8.4",
-    "@types/lodash.merge": "^4.6.9",
-    "@types/prompts": "^2.4.9",
-    "clean-package": "^2.2.0",
-    "cross-env": "^7.0.3",
-    "docdash": "^2.0.2",
-    "dotenv": "^16.4.5",
-    "esbuild": "0.15.5",
-    "esbuild-plugin-ignore": "1.1.1",
-    "jsdoc": "^4.0.4",
-    "jsdoc-to-markdown": "^9.1.1",
-    "nodemon": "2.0.19",
-    "tsc-alias": "1.8.8",
-    "tsx": "^4.16.2",
-    "typedoc": "^0.25.11",
-    "typescript": "^5.5.4"
-  },
-  "alias": {
-    "lib": "./lib"
-  },
-  "clean-package": {
-    "remove": [
-      "scripts",
-      "devDependencies",
-      "publishConfig",
-      "clean-package",
-      "lint-staged",
-      "alias"
-    ]
+    "proc-log": "*"
   }
 }
