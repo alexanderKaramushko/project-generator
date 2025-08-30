@@ -10,7 +10,6 @@ type Level = 'info' | 'error' | 'warning';
 export class Logger {
 
   writeStream: WriteStream | null = null
-  writeStreamOpened = false;
   pgDir: string = ''
   logFilePath: string = ''
 
@@ -19,21 +18,6 @@ export class Logger {
     this.createLogDir();
 
     this.logFilePath = path.join(this.pgDir, `${this.fileName}-${process.pid}.log`);
-
-    createRWFile(this.logFilePath, '', () => {
-      this.writeStream = createWriteStream(
-        this.logFilePath,
-        { flags: 'a' },
-      );
-
-      this.writeStream.on('open', () => {
-        this.writeStreamOpened = true;
-      });
-
-      this.writeStream?.on('error', () => {
-        this.end();
-      });
-    });
   }
 
   createLogDir() {
@@ -47,19 +31,34 @@ export class Logger {
   }
 
   writeLog = (level: Level, message: string) => {
-    if (this.writeStreamOpened) {
-      const colorizedLevels: Record<Level, string> = {
-        error: chalk.red(level),
-        info: chalk.blue(level),
-        warning: chalk.yellow(level),
-      };
+    const colorizedLevels: Record<Level, string> = {
+      error: chalk.red(level),
+      info: chalk.blue(level),
+      warning: chalk.yellow(level),
+    };
 
-      this.writeStream?.write(`${colorizedLevels[level]}: ${message}${os.EOL}`);
-    }
+    this.writeStream?.write(`${colorizedLevels[level]}: ${message}${os.EOL}`);
   }
 
-  start() {
-    process.on('log', this.writeLog);
+  async start() {
+    return new Promise((resolve, reject) => {
+      createRWFile(this.logFilePath, '', () => {
+        this.writeStream = createWriteStream(
+          this.logFilePath,
+          { flags: 'a' },
+        );
+
+        this.writeStream.on('open', () => {
+          process.on('log', this.writeLog);
+          resolve(null);
+        });
+
+        this.writeStream?.on('error', () => {
+          this.end();
+          reject(new Error('Не удалось запустить создание логов!'));
+        });
+      });
+    });
   }
 
   end() {

@@ -6,16 +6,25 @@ import chalk from 'chalk';
 import { exec } from 'child_process';
 import dns from 'dns';
 import { ExecException } from 'node:child_process';
-import { existsSync, mkdir, readdir, readFile, rm } from 'node:fs';
+import { existsSync, mkdir, readdir, readFile, rm, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { PerformanceObserver } from 'perf_hooks';
 import { Template } from 'pg-template-starter';
 import yoctoSpinner from 'yocto-spinner';
 
 import { CLIAbstractParser } from './CLIAbstractParser';
 import { Logger } from './logger';
 import { TemplateValidator } from './template-validator';
-import { createRWFile, identity, mergeJSONFile } from './utils';
+import { createRWFile, identity, measurePerformance, mergeJSONFile } from './utils';
+
+const performanceObserver = new PerformanceObserver((items) => {
+  const measure = items.getEntries().pop();
+
+  Logger.logInfo(`Затраченное время на операцию ${measure?.name}: ${measure?.duration}`);
+});
+
+performanceObserver.observe({ entryTypes: ['measure'] });
 
 type FileContent = string;
 
@@ -63,7 +72,7 @@ export class Core {
   async createApp() {
     const logger = new Logger();
 
-    logger.start();
+    await logger.start();
 
     const { dir, template } = this.CLI.getArgs();
     const spinner = yoctoSpinner().start();
@@ -102,6 +111,8 @@ export class Core {
         spinner.text = chalk.blue(`Указанной директории ${dir} нет, создаем...`);
         mkdir(dir, { recursive: true }, identity(callback));
       } else {
+        // TODO Пока удаляем проект полностью, временное решение, чтобы избежать ошибок
+        rmSync(dir, { recursive: true });
         return callback(null);
       }
     }
@@ -196,7 +207,7 @@ export class Core {
       Logger.logInfo('Распаковка файловой структуры');
       spinner.text = chalk.blue('Распаковка файловой структуры...');
       exec(
-        `tar -xf ${pickedTemplate.fileStructure}-*..tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`,
+        `tar -xf ${pickedTemplate.fileStructure}-*.tgz -C ${dir} && rm ${pickedTemplate.fileStructure}-*.tgz`,
         identity(callback),
       );
     }
@@ -290,23 +301,24 @@ export class Core {
       exec(`cd ${packageDir} && yarn lint:fix`, callback);
     }
 
-    async.waterfall([
-      checkAndMaybeCreateDir,
-      checkIfOnline,
-      downloadTemplate,
-      setupTemplate,
-      getTemplateData,
-      hasTemplate,
-      validateTemplate,
-      createConfigs,
-      downloadFileStructure,
-      setupFileStructure,
-      createFileStructure,
-      createPackages,
-      prepareProject,
-      lint,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    ], function finalCallback(err: NodeJS.ErrnoException | Error | null | undefined) {
+    const flowFns = [
+      measurePerformance(checkAndMaybeCreateDir, 'checkAndMaybeCreateDir'),
+      measurePerformance(checkIfOnline, 'checkIfOnline'),
+      measurePerformance(downloadTemplate, 'downloadTemplate'),
+      measurePerformance(setupTemplate, 'setupTemplate'),
+      measurePerformance(getTemplateData, 'getTemplateData'),
+      measurePerformance(hasTemplate, 'hasTemplate'),
+      measurePerformance(validateTemplate, 'validateTemplate'),
+      measurePerformance(createConfigs, 'createConfigs'),
+      measurePerformance(downloadFileStructure, 'downloadFileStructure'),
+      measurePerformance(setupFileStructure, 'setupFileStructure'),
+      measurePerformance(createFileStructure, 'createFileStructure'),
+      measurePerformance(createPackages, 'createPackages'),
+      measurePerformance(prepareProject, 'prepareProject'),
+      measurePerformance(lint, 'lint'),
+    ];
+
+    async.waterfall(flowFns, function finalCallback(err: NodeJS.ErrnoException | Error | null | undefined) {
       if (err) {
         Logger.logError(err.message);
 
