@@ -24,7 +24,9 @@ const performanceObserver = new PerformanceObserver((items) => {
   Logger.logInfo(`Затраченное время на операцию ${measure?.name}: ${measure?.duration}`);
 });
 
-performanceObserver.observe({ entryTypes: ['measure'] });
+if (process.env.ENABLE_PERFORMANCE_LOGS === 'true') {
+  performanceObserver.observe({ entryTypes: ['measure'] });
+}
 
 type FileContent = string;
 

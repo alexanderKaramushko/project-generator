@@ -13,8 +13,8 @@ const options = {
   outdir: 'dist',
   bundle: true,
   watch: false,
-  minify: true,
-  sourcemap: false,
+  minify: process.env.ENABLE_MINIFICATION === 'true',
+  sourcemap: process.env.ENABLE_MINIFICATION === 'true' ? 'inline' : false,
   target: 'esnext',
   format: 'cjs',
   plugins: [

@@ -9,4 +9,4 @@
 
 | Скрипт                | Назначение                                                                | Пример
 | -------------         | -------------                                                             | -------------
-| link {путь до пакета} | Заменяет подключение workspace-пакета из npm на локальный symlink пакета  | npm link tests/project-generator
+| link {путь до пакета} | Заменяет подключение workspace-пакета из npm на локальный symlink пакета  | npm run link tests/project-generator

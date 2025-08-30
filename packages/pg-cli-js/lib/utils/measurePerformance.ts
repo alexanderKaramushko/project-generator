@@ -7,8 +7,10 @@ export function measurePerformance(fn: (...params: any[]) => any, name: string) 
 
     const callback = args.pop();
 
-    Logger.logInfo('-------------------------');
-    Logger.logInfo(`Начало измерения ${name}`);
+    if (process.env.ENABLE_PERFORMANCE_LOGS === 'true') {
+      Logger.logInfo('-------------------------');
+      Logger.logInfo(`Начало измерения ${name}`);
+    }
 
     fn(...args, (...params: any) => {
       callback(...params);
@@ -16,8 +18,10 @@ export function measurePerformance(fn: (...params: any[]) => any, name: string) 
       performance.mark(`start-${name}`);
       performance.measure(name, `end-${name}`, `start-${name}`);
 
-      Logger.logInfo('-------------------------');
-      Logger.logInfo(`Завершение измерения ${name}`);
+      if (process.env.ENABLE_PERFORMANCE_LOGS === 'true') {
+        Logger.logInfo('-------------------------');
+        Logger.logInfo(`Завершение измерения ${name}`);
+      }
     });
   };
 }
